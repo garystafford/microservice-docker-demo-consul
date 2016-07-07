@@ -6,7 +6,7 @@ services:
     hostname: "node1"
     container_name: "node1"
     # volumes:
-    #   - /data/consul:/data
+    #   - data:/data
     command: "-server -bootstrap-expect 3"
 
   node2:
@@ -14,7 +14,7 @@ services:
     hostname: "node2"
     container_name: "node2"
     # volumes:
-    #   - /data/consul:/data
+    #   - data:/data
     command: "-server -join ${JOIN_IP}"
 
   node3:
@@ -22,7 +22,7 @@ services:
     hostname: "node3"
     container_name: "node3"
     # volumes:
-    #   - /data/consul:/data
+    #   - data:/data
     command: "-server -join ${JOIN_IP}"
 
   node4:
@@ -34,5 +34,5 @@ services:
       - "8500:8500"
       - "8600:53/udp"
     # volumes:
-    #   - /data/consul:/data
+    #   - data:/data
     command: "-join ${JOIN_IP} -ui-dir /ui"
