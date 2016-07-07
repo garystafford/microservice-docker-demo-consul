@@ -1,0 +1,18 @@
+version: "2"
+
+services:
+  node1:
+    image: "progrium/consul"
+    hostname: "node1"
+    container_name: "node1"
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+    volumes:
+      - data:/data
+    command: "-server -bootstrap -ui-dir /ui"
+
+volumes:
+  data:
+    external: true
