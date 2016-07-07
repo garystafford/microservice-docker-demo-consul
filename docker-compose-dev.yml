@@ -9,10 +9,10 @@ services:
       - "8400:8400"
       - "8500:8500"
       - "8600:53/udp"
-    volumes:
-      - data:/data
+    # volumes:
+    #   - data:/data
     command: "-server -bootstrap -ui-dir /ui"
 
-volumes:
-  data:
-    external: true
+# volumes:
+#   data:
+#     external: true
