@@ -36,3 +36,7 @@ services:
     # volumes:
     #   - data:/data
     command: "-join ${JOIN_IP} -ui-dir /ui"
+
+# volumes:
+#   data:
+#     external: true
