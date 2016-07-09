@@ -25,7 +25,7 @@ docker-compose -f docker-compose-test.yml -p widget up -d node2 node3 node4
 
 Setup Test on Swarm - (4) node cluster
 ```bash
-Read [docker-swarm-setup.md](docker-swarm-setup.md) for instructions
+Read [docker-swarm-setup.md](file/docker-swarm-setup.md) for instructions
 ```
 
 General commands for dev and test
