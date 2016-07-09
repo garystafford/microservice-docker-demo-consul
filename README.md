@@ -3,10 +3,10 @@
 Containerized versions of [progrium/consul](https://hub.docker.com/r/progrium/consul/) Image, using Docker Compose.
 
 #### Set-Up Options
-Docker Compose versions:
-1. [Development](docker-compose-dev.yml): Single node server
-2. [Test](docker-compose-test.yml): 4-node cluster: (3) servers/(1) agent
-3. [Test on Swarm](docker-compose-test-swarm.yml):4-node cluster: (3) servers/(1) agent, on multi-host Swarm Cluster
+Docker Compose versions:  
+1. [Development](docker-compose-dev.yml): Single node server  
+2. [Test](docker-compose-test.yml): 4-node cluster: (3) servers/(1) agent  
+3. [Test on Swarm](docker-compose-test-swarm.yml): 4-node cluster: (3) servers/(1) agent, on multi-host Swarm cluster
 
 #### Commands
 
