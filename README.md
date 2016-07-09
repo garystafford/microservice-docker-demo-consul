@@ -2,29 +2,30 @@
 
 Containerized versions of [progrium/consul](https://hub.docker.com/r/progrium/consul/) Image, using Docker Compose.
 
-#### Versions
+#### Set-Up Options
 Docker Compose versions:
 * Development - (1) node server
 * Test - (4) node cluster: (3) servers, (1) agent
+* Test on Swarm - (4) node cluster: (3) servers, (1) agent on multi-host Swarm Cluster
 
 #### Commands
-Install Consul locally
-```bash
-brew update
-brew install Caskroom/cask/consul-cli
-```
 
-Single container version for development
+Setup Development - (1) node server
 ```bash
 docker-compose -f docker-compose-dev.yml up -d
 ```
 
-Four-container version for 'Production like' testing
+Setup Test - (4) node cluster
 ```bash
 docker-compose -f docker-compose-test.yml -p widget up -d node1
 export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.widget_default.IPAddress }}' node1)"
 echo ${JOIN_IP}
 docker-compose -f docker-compose-test.yml -p widget up -d node2 node3 node4
+```
+
+Setup Test on Swarm - (4) node cluster
+```bash
+Read [docker-swarm-setup.md](docker-swarm-setup.md) for instructions
 ```
 
 General commands for dev and test
@@ -39,9 +40,14 @@ docker exec -t node2 consul leave
 docker start node2 # will rejoin
 
 ```
-
-#### Running Containers
+Install Consul locally
+```bash
+brew update
+brew install Caskroom/cask/consul-cli
 ```
+
+Running Test Containers
+```text
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                        NAMES
 9d30753bb100        progrium/consul     "/bin/start -server -"   8 minutes ago       Up 8 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                             node3
 7a73fba8fb8a        progrium/consul     "/bin/start -join 172"   8 minutes ago       Up 8 minutes        53/tcp, 0.0.0.0:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 0.0.0.0:8500->8500/tcp, 0.0.0.0:8600->53/udp   node4

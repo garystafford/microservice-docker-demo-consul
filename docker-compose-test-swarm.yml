@@ -1,0 +1,59 @@
+version: "2"
+
+services:
+  node1:
+    image: "progrium/consul"
+    hostname: "node1"
+    container_name: "node1"
+    command: "-server -bootstrap-expect 3"
+    networks:
+     - widget_overlay_net
+    environment:
+      - "constraint:node==agent1"
+    volumes:
+      - widget:/data
+
+  node2:
+    image: "progrium/consul"
+    hostname: "node2"
+    container_name: "node2"
+    command: "-server -join ${JOIN_IP}"
+    networks:
+     - widget_overlay_net
+    environment:
+      - "constraint:node==agent2"
+    volumes:
+      - widget:/data
+
+  node3:
+    image: "progrium/consul"
+    hostname: "node3"
+    container_name: "node3"
+    command: "-server -join ${JOIN_IP}"
+    networks:
+     - widget_overlay_net
+    environment:
+      - "constraint:node==agent3"
+    volumes:
+      - widget:/data
+
+  node4:
+    image: "progrium/consul"
+    hostname: "node4"
+    container_name: "node4"
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+    command: "-join ${JOIN_IP} -ui-dir /ui"
+    networks:
+     - widget_overlay_net
+    environment:
+      - "constraint:node==agent4"
+
+networks:
+  widget_overlay_net:
+    external: true
+
+volumes:
+  widget:
