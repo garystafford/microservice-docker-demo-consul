@@ -1,21 +1,21 @@
-# Consul
+# Containerize Consul with Docker Compose
 
 Containerized versions of [progrium/consul](https://hub.docker.com/r/progrium/consul/) Image, using Docker Compose.
 
 #### Set-Up Options
 Docker Compose versions:
-* Development - (1) node server
-* Test - (4) node cluster: (3) servers, (1) agent
-* Test on Swarm - (4) node cluster: (3) servers, (1) agent on multi-host Swarm Cluster
+1. [Development](docker-compose-dev.yml): Single node server
+2. [Test](docker-compose-test.yml): 4-node cluster: (3) servers/(1) agent
+3. [Test on Swarm](docker-compose-test-swarm.yml):4-node cluster: (3) servers/(1) agent, on multi-host Swarm Cluster
 
 #### Commands
 
-Setup Development - (1) node server
+Setup [Development](docker-compose-dev.yml): Single node server
 ```bash
 docker-compose -f docker-compose-dev.yml up -d
 ```
 
-Setup Test - (4) node cluster
+Setup [Test](docker-compose-test.yml): 4-node cluster
 ```bash
 docker-compose -f docker-compose-test.yml -p widget up -d node1
 export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.widget_default.IPAddress }}' node1)"
@@ -23,7 +23,7 @@ echo ${JOIN_IP}
 docker-compose -f docker-compose-test.yml -p widget up -d node2 node3 node4
 ```
 
-Setup Test on Swarm - (4) node cluster  
+[Test on Swarm](docker-compose-test-swarm.yml):4-node cluster  
 Read [docker-swarm-setup.md](docker-swarm-setup.md) for instructions
 
 General commands for dev and test
@@ -44,7 +44,7 @@ brew update
 brew install Caskroom/cask/consul-cli
 ```
 
-Running Test Containers
+Running Test Containers (option 2)
 ```text
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                        NAMES
 9d30753bb100        progrium/consul     "/bin/start -server -"   8 minutes ago       Up 8 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                             node3

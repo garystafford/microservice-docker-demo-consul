@@ -1,4 +1,4 @@
-# Install Consul on Swarm Cluster Reference
+# Install Consul on Docker Swarm Cluster
 Build a multi-host Docker Swarm cluster, using Overlay networking. Deploy a multi-node Consul cluster to the Swarm multi-host cluster.
 
 #### Commands
