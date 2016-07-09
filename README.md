@@ -40,7 +40,7 @@ docker start node2 # will rejoin
 
 ```
 
-#### Running containers
+#### Running Containers
 ```
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                        NAMES
 9d30753bb100        progrium/consul     "/bin/start -server -"   8 minutes ago       Up 8 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                             node3
@@ -49,7 +49,7 @@ fd6a71c9addf        progrium/consul     "/bin/start -server -"   8 minutes ago  
 5c7436d46310        progrium/consul     "/bin/start -server -"   8 minutes ago       Up 8 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                             node1
 ```
 
-#### Links  
-* [Consul Nodes](curl http://localhost:8500/v1/catalog/nodes): localhost:8500/v1/catalog/nodes
+#### Local Consul Links  
+* [Consul Nodes](http://localhost:8500/v1/catalog/nodes): localhost:8500/v1/catalog/nodes
 * [Key/Value Pairs](http://localhost:8500/v1/kv/?recurse): localhost:8500/v1/kv/?recurse
 * [Consul UI](http://localhost:8500/ui): localhost:8500/ui
