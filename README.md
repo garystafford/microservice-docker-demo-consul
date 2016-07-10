@@ -6,7 +6,7 @@ Containerized versions of [progrium/consul](https://hub.docker.com/r/progrium/co
 Docker Compose versions:  
 1. [Development](microservice-docker-demo-consul#single-node): Single Node ([_docker-compose file_](docker-compose-dev.yml))  
 2. [Test](microservice-docker-demo-consul#cluster): Four-Node Cluster ([_docker-compose file_](docker-compose-test.yml))  
-3. [Prod-like](microservice-docker-demo-consul#cluster-on-swarm): Multi-Host Cluster ([_docker-compose file_](docker-compose-test-swarm.yml))  
+3. [Prod-like](microservice-docker-demo-consul#cluster-on-swarm): Multi-Host Cluster with Swarm ([_docker-compose file_](docker-compose-test-swarm.yml))  
 
 ### Commands
 Software versions used for this project, all latest as of 2016-07-09
@@ -30,7 +30,7 @@ Single Consul server node
 docker-compose -f docker-compose-dev.yml up -d
 ```
 
-#### Cluster
+#### Four-Node Cluster
 Four-node Consul cluster with (3) servers and (1) agent
 ```bash
 docker-compose -f docker-compose-test.yml -p demo up -d node1
@@ -54,7 +54,7 @@ Local Consul Links
 * [Key/Value Pairs](http://localhost:8500/v1/kv/?recurse): localhost:8500/v1/kv/?recurse
 * [Consul UI](http://localhost:8500/ui): localhost:8500/ui
 
-#### Cluster on Swarm
+#### Multi-Host Cluster with Swarm
 Four-node Consul cluster, (3) servers and (1) agent, on a multi-host Docker Swarm cluster. Uses overlay networking and persistent storage. One node per host (_i.e. node1 on agent1_)
 
 Setup multi-host Swarm keystore
