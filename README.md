@@ -1,6 +1,6 @@
 ## Containerize Consul with Docker Compose and Swarm
 
-Containerized versions Consul, using the [progrium/consul](https://hub.docker.com/r/progrium/consul/) Docker Image. Individual Docker run commands from the [progrium/consul](https://hub.docker.com/r/progrium/consul/) instructions have been converted into Version 2 Docker Compose files, using latest Docker toolkit versions. Includes instructions for setting up a multi-host Docker Swarm environment, for a Consul cluster. Currently, uses VirtualBox VMs as hosts.
+Various containerized Consul cluster configurations, using [gliderlabs/consul](https://github.com/gliderlabs/docker-consul/tree/master/0.6) Docker Images. Individual Docker run commands from the [progrium/consul](https://hub.docker.com/r/progrium/consul/) instructions have been converted into Version 2 Docker Compose files. Includes instructions are included for setting up a multi-host Docker Swarm environment, for a Consul cluster. Currently, uses VirtualBox VMs as hosts.
 
 ![Consul UI Swarm](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_Swarm.png?raw=true)
 
