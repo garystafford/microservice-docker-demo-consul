@@ -146,7 +146,7 @@ docker network inspect demo_overlay_net # confirm (4) members
 Resulting Network
 ```text
 docker network ls
-NETWORK ID          NAME                     DRIVER              SCOPE
+NETWORK ID          NAME                DRIVER              SCOPE
 ec7a2e25ea1c        demo_overlay_net    overlay             global
 ```
 Resulting volumes
