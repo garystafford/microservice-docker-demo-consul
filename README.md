@@ -164,6 +164,13 @@ URLs on my local machine to Consul UI's
 * Multi-host Swarm keystore: http://192.168.99.104:8500/ui/#/dc1/nodes/consul
 * Containerized Consul cluster: http://192.168.99.100:8500/ui/#/dc1/services/consul
 
+### Calling Key/Value storage
+```bash
+curl -s http://192.168.99.104:8500/v1/kv/development/spring/data/mongodb/port?raw
+> 27017
+```
+![Consul UI Key/Value](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_KeyValue.png?raw=true)
+
 ### Misc Items
 Software versions used for this project, all latest as of 2016-07-09
 ```bash
@@ -217,3 +224,4 @@ brew install Caskroom/cask/consul-cli
 * https://www.consul.io/docs/
 * https://docs.docker.com/swarm/install-manual/
 * https://github.com/gliderlabs/registrator/issues/349
+* https://github.com/JoergM/consul-examples/tree/master/http_api
