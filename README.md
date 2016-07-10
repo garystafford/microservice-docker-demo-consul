@@ -164,7 +164,8 @@ URLs on my local machine to Consul UI's
 * Multi-host Swarm keystore: http://192.168.99.104:8500/ui/#/dc1/nodes/consul
 * Containerized Consul cluster: http://192.168.99.100:8500/ui/#/dc1/services/consul
 
-### Calling Key/Value storage
+### Calling Key/Value Store
+Retrieve existing value from key/value store
 ```bash
 curl -s http://192.168.99.104:8500/v1/kv/development/spring/data/mongodb/port?raw
 > 27017
