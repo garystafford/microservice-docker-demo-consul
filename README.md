@@ -48,9 +48,7 @@ Four-node Consul cluster, (3) servers and (1) agent, on a multi-host Docker Swar
 Setup multi-host Swarm keystore
 ```bash
 docker-machine create -d virtualbox consul0
-
 eval "$(docker-machine env consul0)"
-
 docker run -d -p "8500:8500" -h "consul" --name consul gliderlabs/consul-server -server -bootstrap
 ```
 
@@ -182,22 +180,7 @@ curl -s http://192.168.99.104:8500/v1/kv/development/spring/data/mongodb/port?ra
 ```
 ![Consul UI Key/Value](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_KeyValue.png?raw=true)
 
-### Misc Items
-Software versions used for this project, all latest as of 2016-07-09
-```bash
-system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && \
-  docker --version && \
-  docker-compose --version && \
-  docker-machine --version && \
-  echo "VirtualBox $(vboxmanage --version)"
-
-  System Version: OS X 10.11.5 (15F34)
-  Docker version 1.12.0-rc3, build 91e29e8, experimental
-  docker-compose version 1.8.0-rc2, build c72c966
-  docker-machine version 0.8.0-rc2, build 4ca1b85
-  VirtualBox 5.0.24r108355
-```
-
+### Misc Commands
 Clean up all project containers and volumes
 ```bash
 docker rm -f server1 server2 server3 agent1 # delete all Consul nodes
@@ -228,6 +211,23 @@ Install Consul locally
 brew update
 brew install Caskroom/cask/consul-cli
 ```
+
+### Software Versions
+Software versions used for this project, all latest as of 2016-07-09
+```bash
+system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && \
+  docker --version && \
+  docker-compose --version && \
+  docker-machine --version && \
+  echo "VirtualBox $(vboxmanage --version)"
+
+  System Version: OS X 10.11.5 (15F34)
+  Docker version 1.12.0-rc3, build 91e29e8, experimental
+  docker-compose version 1.8.0-rc2, build c72c966
+  docker-machine version 0.8.0-rc2, build 4ca1b85
+  VirtualBox 5.0.24r108355
+```
+
 ### References
 * https://hub.docker.com/r/progrium/consul/
 * https://docs.docker.com/engine/userguide/networking/get-started-overlay/
