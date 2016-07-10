@@ -175,12 +175,13 @@ URLs on my local machine to Consul UI's
 * Containerized Consul cluster: http://192.168.99.100:8500/ui/#/dc1/services/consul
 
 ### Calling Key/Value Store
-Retrieve existing value from key/value store
+Retrieve an existing value from the key/value store
+![Consul UI Key/Value](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_KeyValue.png?raw=true)
+
 ```bash
 curl -s http://192.168.99.104:8500/v1/kv/development/spring/data/mongodb/port?raw
-> 27017
+  > 27017
 ```
-![Consul UI Key/Value](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_KeyValue.png?raw=true)
 
 ### Misc Commands
 Clean up all project containers and volumes
