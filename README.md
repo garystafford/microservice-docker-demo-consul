@@ -1,5 +1,7 @@
 ## Containerize Consul with Docker Compose and Swarm
 
+![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/Consul_UI.png?raw=true)
+
 Containerized versions Consul, using the [progrium/consul](https://hub.docker.com/r/progrium/consul/) Docker Image. Individual Docker run commands from the [progrium/consul](https://hub.docker.com/r/progrium/consul/) instructions have been converted into Version 2 Docker Compose files, using latest Docker toolkit versions. Includes instructions for setting up a multi-host Docker Swarm environment, for a Consul cluster. Currently, uses VirtualBox VMs as hosts.
 
 ### Set-Up Options
@@ -9,21 +11,6 @@ Docker Compose versions:
 3. [Prod-like](microservice-docker-demo-consul#cluster-on-swarm): Multi-Host Cluster with Swarm ([_docker-compose file_](docker-compose-test-swarm.yml))  
 
 ### Commands
-Software versions used for this project, all latest as of 2016-07-09
-```bash
-system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && \
-  docker --version && \
-  docker-compose --version && \
-  docker-machine --version && \
-  echo "VirtualBox $(vboxmanage --version)"
-
-  System Version: OS X 10.11.5 (15F34)
-  Docker version 1.12.0-rc3, build 91e29e8, experimental
-  docker-compose version 1.8.0-rc2, build c72c966
-  docker-machine version 0.8.0-rc2, build 4ca1b85
-  VirtualBox 5.0.24r108355
-```
-
 #### Single Node
 Single Consul server node
 ```bash
@@ -168,13 +155,28 @@ efe920bbc230        progrium/consul     "/bin/start -server -"   25 minutes ago 
 6541b9db4b54        progrium/consul     "/bin/start -join 10."   25 minutes ago      Up 25 minutes       53/tcp, 192.168.99.111:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 192.168.99.111:8500->8500/tcp, 192.168.99.111:8600->53/udp   agent4/node4
 21143f1a643a        progrium/consul     "/bin/start -server -"   25 minutes ago      Up 25 minutes       53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent1/node1
 ```
-
 URLs on my local machine to Consul UI's
 * Multi-host Swarm keystore: http://192.168.99.105:8500/ui/#/dc1/nodes/consul
 * Containerized Consul cluster: http://192.168.99.111:8500/ui/#/dc1/services/consul
 
+![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/Consul_UI.png?raw=true)
 
-### General Commands
+### Misc Items
+Software versions used for this project, all latest as of 2016-07-09
+```bash
+system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && \
+  docker --version && \
+  docker-compose --version && \
+  docker-machine --version && \
+  echo "VirtualBox $(vboxmanage --version)"
+
+  System Version: OS X 10.11.5 (15F34)
+  Docker version 1.12.0-rc3, build 91e29e8, experimental
+  docker-compose version 1.8.0-rc2, build c72c966
+  docker-machine version 0.8.0-rc2, build 4ca1b85
+  VirtualBox 5.0.24r108355
+```
+
 Clean up all project containers and volumes
 ```bash
 docker rm -f node1 node2 node3 node4 # delete all Consul nodes
@@ -183,7 +185,7 @@ docker volume rm $(docker volume ls -qf dangling=true) # remove unused local vol
 docker network rm demo_overlay_net
 ```
 
-General commands for dev and test
+Useful commands
 ```bash
 dig @0.0.0.0 -p 8600 node1.node.consul
 docker exec -t node1 consul info
