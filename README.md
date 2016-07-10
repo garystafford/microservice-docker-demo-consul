@@ -1,8 +1,8 @@
 ## Containerize Consul with Docker Compose and Swarm
 
-![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/Consul_UI.png?raw=true)
-
 Containerized versions Consul, using the [progrium/consul](https://hub.docker.com/r/progrium/consul/) Docker Image. Individual Docker run commands from the [progrium/consul](https://hub.docker.com/r/progrium/consul/) instructions have been converted into Version 2 Docker Compose files, using latest Docker toolkit versions. Includes instructions for setting up a multi-host Docker Swarm environment, for a Consul cluster. Currently, uses VirtualBox VMs as hosts.
+
+![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/Consul_UI.png?raw=true)
 
 ### Set-Up Options
 Docker Compose versions:  
@@ -55,6 +55,8 @@ docker run -d \
   -h "consul" \
   progrium/consul -server -bootstrap
 ```
+
+![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/Consul_UI_Swarm.png?raw=true)
 
 Setup (4) Docker Machine hosts for Docker Swarm cluster
 ```bash
@@ -155,11 +157,12 @@ efe920bbc230        progrium/consul     "/bin/start -server -"   25 minutes ago 
 6541b9db4b54        progrium/consul     "/bin/start -join 10."   25 minutes ago      Up 25 minutes       53/tcp, 192.168.99.111:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 192.168.99.111:8500->8500/tcp, 192.168.99.111:8600->53/udp   agent4/node4
 21143f1a643a        progrium/consul     "/bin/start -server -"   25 minutes ago      Up 25 minutes       53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent1/node1
 ```
+
+![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/Consul_UI.png?raw=true)
+
 URLs on my local machine to Consul UI's
 * Multi-host Swarm keystore: http://192.168.99.105:8500/ui/#/dc1/nodes/consul
 * Containerized Consul cluster: http://192.168.99.111:8500/ui/#/dc1/services/consul
-
-![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/Consul_UI.png?raw=true)
 
 ### Misc Items
 Software versions used for this project, all latest as of 2016-07-09
