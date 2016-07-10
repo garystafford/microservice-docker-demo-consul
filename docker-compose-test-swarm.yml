@@ -7,11 +7,11 @@ services:
     container_name: "node1"
     command: "-server -bootstrap-expect 3"
     networks:
-     - widget_overlay_net
+     - demo_overlay_net
     environment:
       - "constraint:node==agent1"
     volumes:
-      - widget:/data
+      - data:/data
 
   node2:
     image: "progrium/consul"
@@ -19,11 +19,11 @@ services:
     container_name: "node2"
     command: "-server -join ${JOIN_IP}"
     networks:
-     - widget_overlay_net
+     - demo_overlay_net
     environment:
       - "constraint:node==agent2"
     volumes:
-      - widget:/data
+      - data:/data
 
   node3:
     image: "progrium/consul"
@@ -31,11 +31,11 @@ services:
     container_name: "node3"
     command: "-server -join ${JOIN_IP}"
     networks:
-     - widget_overlay_net
+     - demo_overlay_net
     environment:
       - "constraint:node==agent3"
     volumes:
-      - widget:/data
+      - data:/data
 
   node4:
     image: "progrium/consul"
@@ -47,13 +47,16 @@ services:
       - "8600:53/udp"
     command: "-join ${JOIN_IP} -ui-dir /ui"
     networks:
-     - widget_overlay_net
+     - demo_overlay_net
     environment:
       - "constraint:node==agent4"
+    volumes:
+      - data:/data
 
 networks:
-  widget_overlay_net:
+  demo_overlay_net:
     external: true
 
 volumes:
-  widget:
+  data:
+    # external: true

@@ -9,9 +9,4 @@ services:
       - "8400:8400"
       - "8500:8500"
       - "8600:53/udp"
-    volumes:
-      - widget:/data
     command: "-server -bootstrap -ui-dir /ui"
-
-volumes:
-  widget:

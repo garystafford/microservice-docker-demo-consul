@@ -9,20 +9,34 @@ Docker Compose versions:
 3. [Prod-like Version on Swarm](docker-compose-test-swarm.yml): 4-node cluster on multiple hosts
 
 ### Commands
+Software versions used for this project, all latest as of 2016-07-09
+```bash
+system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && \
+  docker --version && \
+  docker-compose --version && \
+  docker-machine --version && \
+  echo "VirtualBox $(vboxmanage --version)"
+
+  System Version: OS X 10.11.5 (15F34)
+  Docker version 1.12.0-rc3, build 91e29e8, experimental
+  docker-compose version 1.8.0-rc2, build c72c966
+  docker-machine version 0.8.0-rc2, build 4ca1b85
+  VirtualBox 5.0.24r108355
+```
 
 ##### Single Node
-Single Consul Server node
+Single Consul server node
 ```bash
 docker-compose -f docker-compose-dev.yml up -d
 ```
 
 ##### Cluster
-Four-node Consul cluster with (3) server and (1) agent
+Four-node Consul cluster with (3) servers and (1) agent
 ```bash
-docker-compose -f docker-compose-test.yml -p widget up -d node1
-export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.widget_default.IPAddress }}' node1)"
+docker-compose -f docker-compose-test.yml -p demo up -d node1
+export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.demo_default.IPAddress }}' node1)"
 echo ${JOIN_IP}
-docker-compose -f docker-compose-test.yml -p widget up -d node2 node3 node4
+docker-compose -f docker-compose-test.yml -p demo up -d node2 node3 node4
 ```
 
 Results
@@ -40,13 +54,11 @@ Local Consul Links
 * [Consul UI](http://localhost:8500/ui): localhost:8500/ui
 
 ##### Cluster on Swarm
-Four-node Consul cluster, on a multi-host Docker Swarm cluster, using overlay networking and persistent storage.
+Four-node Consul cluster, (3) servers and (1) agent, on a multi-host Docker Swarm cluster. Uses overlay networking and persistent storage.
 
 Setup multi-host Swarm keystore
 ```bash
-docker-machine create \
-  -d virtualbox \
-  mh-keystore
+docker-machine create -d virtualbox mh-keystore
 
 eval "$(docker-machine env mh-keystore)"
 
@@ -98,7 +110,7 @@ docker-machine ls | grep Running
   agent2        -        virtualbox   Running   tcp://192.168.99.109:2376   agent1            v1.12.0-rc3
   agent3        -        virtualbox   Running   tcp://192.168.99.110:2376   agent1            v1.12.0-rc3
   agent4        -        virtualbox   Running   tcp://192.168.99.111:2376   agent1            v1.12.0-rc3
-  mh-keystore   -        virtualbox   Running   tcp://192.168.99.105:2376                     v1.12.0-rc3
+  mh-keystore   *        virtualbox   Running   tcp://192.168.99.105:2376                     v1.12.0-rc3
 ```
 
 Resulting Docker Swarm containers
@@ -115,31 +127,39 @@ docker ps -a
 Build Overlay Network
 ```bash
 eval $(docker-machine env --swarm agent1)
-docker network create --driver overlay --subnet=10.0.9.0/24 widget_overlay_net
+docker network create --driver overlay --subnet=10.0.9.0/24 demo_overlay_net
 eval $(docker-machine env agent1)
 docker network ls
-  ee39ebc3bd60        widget_overlay_net   overlay             global
-
-docker network inspect widget_overlay_net
+ > ec7a2e25ea1c        demo_overlay_net    overlay             global
 ```
 
 Deploy (4) node Consul cluster to multi-host Swarm cluster
 ```bash
 DOCKER_HOST=$(docker-machine ip agent1):3376
-docker-compose -f docker-compose-test-swarm.yml -p widget up -d node1
-export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.widget_overlay_net.IPAddress }}' node1)"
+docker-compose -f docker-compose-test-swarm.yml -p demo up -d node1
+export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.demo_overlay_net.IPAddress }}' node1)"
 echo ${JOIN_IP}
-docker-compose -f docker-compose-test-swarm.yml -p widget up -d node2 node3 node4
+docker-compose -f docker-compose-test-swarm.yml -p demo up -d node2 node3 node4
+docker network inspect demo_overlay_net # confirm (4) members
+```
+
+Resulting volumes
+```text
+docker volume ls | grep demo_data
+  DRIVER              VOLUME NAME
+  local               agent1/demo_data
+  local               agent2/demo_data
+  local               agent3/demo_data
+  local               agent4/demo_data
 ```
 
 Resulting Consul containers
 ```text
-docker ps
-  CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                                             NAMES
-  7fb69c8c8fb0        progrium/consul     "/bin/start -join 10."   2 minutes ago       Up 2 minutes        53/tcp, 192.168.99.111:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 192.168.99.111:8500->8500/tcp, 192.168.99.111:8600->53/udp   agent4/node4
-  c645a612eea0        progrium/consul     "/bin/start -server -"   2 minutes ago       Up 2 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent2/node2
-  8b334645b423        progrium/consul     "/bin/start -server -"   2 minutes ago       Up 2 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent3/node3
-  1ccfc35adab5        progrium/consul     "/bin/start -server -"   3 minutes ago       Up 3 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent1/node1
+docker ps | grep node
+8a0af74866ce        progrium/consul     "/bin/start -server -"   2 minutes ago       Up 2 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent3/node3
+efe920bbc230        progrium/consul     "/bin/start -server -"   2 minutes ago       Up 2 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent2/node2
+6541b9db4b54        progrium/consul     "/bin/start -join 10."   2 minutes ago       Up 2 minutes        53/tcp, 192.168.99.111:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 192.168.99.111:8500->8500/tcp, 192.168.99.111:8600->53/udp   agent4/node4
+21143f1a643a        progrium/consul     "/bin/start -server -"   2 minutes ago       Up 2 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent1/node1
 ```
 
 URLs on my local machine to Consul UI's
@@ -148,24 +168,31 @@ URLs on my local machine to Consul UI's
 
 
 ### General Commands
-General commands for dev and test
+Clean up all project containers and volumes
 ```bash
 docker rm -f node1 node2 node3 node4 # delete all Consul nodes
+docker rm -f agent1/node1 agent2/node2 agent3/node3 agent4/node4 # for Swarm version
+docker volume rm $(docker volume ls -qf dangling=true) # remove unused local volumes
+docker network rm demo_overlay_net
+```
+
+General commands for dev and test
+```bash
 dig @0.0.0.0 -p 8600 node1.node.consul
 docker exec -t node1 consul info
 docker exec -t node1 consul members
 docker logs node1
+docker network inspect demo_overlay_net
 docker volume rm $(docker volume ls -qf dangling=true) # remove unused local volumes
 docker exec -t node2 consul leave # leave cluster
 docker start node2 # will rejoin
-
 ```
 Install Consul locally
 ```bash
 brew update
 brew install Caskroom/cask/consul-cli
 ```
-References:   
+### References
 * https://hub.docker.com/r/progrium/consul/
 * https://docs.docker.com/engine/userguide/networking/get-started-overlay/
 * https://docs.docker.com/compose/compose-file/#/version-2
