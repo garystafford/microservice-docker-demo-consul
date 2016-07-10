@@ -106,6 +106,7 @@ docker-machine create \
 Resulting Machines (VMs)
 ```text
 docker-machine ls | grep Running
+  NAME          ACTIVE   DRIVER       STATE     URL                         SWARM             DOCKER        ERRORS
   agent1        -        virtualbox   Running   tcp://192.168.99.108:2376   agent1 (master)   v1.12.0-rc3
   agent2        -        virtualbox   Running   tcp://192.168.99.109:2376   agent1            v1.12.0-rc3
   agent3        -        virtualbox   Running   tcp://192.168.99.110:2376   agent1            v1.12.0-rc3
@@ -155,11 +156,12 @@ docker volume ls | grep demo_data
 
 Resulting Consul containers
 ```text
-docker ps | grep node
-8a0af74866ce        progrium/consul     "/bin/start -server -"   2 minutes ago       Up 2 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent3/node3
-efe920bbc230        progrium/consul     "/bin/start -server -"   2 minutes ago       Up 2 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent2/node2
-6541b9db4b54        progrium/consul     "/bin/start -join 10."   2 minutes ago       Up 2 minutes        53/tcp, 192.168.99.111:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 192.168.99.111:8500->8500/tcp, 192.168.99.111:8600->53/udp   agent4/node4
-21143f1a643a        progrium/consul     "/bin/start -server -"   2 minutes ago       Up 2 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent1/node1
+docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                                             NAMES
+8a0af74866ce        progrium/consul     "/bin/start -server -"   25 minutes ago      Up 25 minutes       53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent3/node3
+efe920bbc230        progrium/consul     "/bin/start -server -"   25 minutes ago      Up 25 minutes       53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent2/node2
+6541b9db4b54        progrium/consul     "/bin/start -join 10."   25 minutes ago      Up 25 minutes       53/tcp, 192.168.99.111:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 192.168.99.111:8500->8500/tcp, 192.168.99.111:8600->53/udp   agent4/node4
+21143f1a643a        progrium/consul     "/bin/start -server -"   25 minutes ago      Up 25 minutes       53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent1/node1
 ```
 
 URLs on my local machine to Consul UI's
