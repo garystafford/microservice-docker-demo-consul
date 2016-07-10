@@ -1,6 +1,6 @@
 # Containerize Consul with Docker Compose
 
-Containerized versions of [progrium/consul](https://hub.docker.com/r/progrium/consul/) Image, using Docker Compose.
+Containerized versions of [progrium/consul](https://hub.docker.com/r/progrium/consul/) Image, using Docker Compose. Individual Docker run commands from [progrium/consul](https://hub.docker.com/r/progrium/consul/), converted into Version 2 Docker Compose files, using latest Docker toolkit versions.
 
 ### Set-Up Options
 Docker Compose versions:  
