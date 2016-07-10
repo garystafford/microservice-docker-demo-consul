@@ -29,11 +29,11 @@ docker-compose -f docker-compose-test.yml -p demo up -d server2 server3 agent1
 Results
 ```text
 docker ps
-CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS              PORTS                                                                                                                    NAMES
-745cb8b0cf6e        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server2
-7ce07e7e92df        gliderlabs/consul-agent    "/bin/consul agent -c"   16 seconds ago       Up 15 seconds       0.0.0.0:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:8500->8500/tcp, 0.0.0.0:8600->53/udp   agent1
-ac542653fd34        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server3
-db053d540c64        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server1
+  CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS              PORTS                                                                                                                    NAMES
+  745cb8b0cf6e        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server2
+  7ce07e7e92df        gliderlabs/consul-agent    "/bin/consul agent -c"   16 seconds ago       Up 15 seconds       0.0.0.0:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:8500->8500/tcp, 0.0.0.0:8600->53/udp   agent1
+  ac542653fd34        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server3
+  db053d540c64        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server1
 ```
 ![Consul UI No Swarm](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_No_Swarm.png?raw=true)
 
@@ -95,15 +95,15 @@ Resulting Machines (VMs)
 ```text
 docker-machine ls
 NAME          ACTIVE   DRIVER       STATE     URL                         SWARM              DOCKER        ERRORS
-consul0       *        virtualbox   Running   tcp://192.168.99.100:2376                      v1.12.0-rc3
+consul0       -        virtualbox   Running   tcp://192.168.99.100:2376                      v1.12.0-rc3
 master0       -        virtualbox   Running   tcp://192.168.99.101:2376   master0 (master)   v1.12.0-rc3
-node0         -        virtualbox   Running   tcp://192.168.99.102:2376   master0            v1.12.0-rc3
-node1         -        virtualbox   Running   tcp://192.168.99.103:2376   master0            v1.12.0-rc3
-node2         -        virtualbox   Running   tcp://192.168.99.104:2376   master0            v1.12.0-rc3
+node0         -        virtualbox   Running   tcp://192.168.99.103:2376   master0            v1.12.0-rc3
+node1         -        virtualbox   Running   tcp://192.168.99.104:2376   master0            v1.12.0-rc3
+node2         -        virtualbox   Running   tcp://192.168.99.102:2376   master0            v1.12.0-rc3
 ```
 
 Resulting Docker Swarm containers
-``` text
+```text
 docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                     NAMES
 e6edfc92a0df        swarm:latest        "/swarm join --advert"   11 minutes ago      Up 11 minutes       2375/tcp                                  node2/swarm-agent
@@ -134,8 +134,8 @@ docker network inspect demo_overlay_net # confirm (4) members
 Resulting Network
 ```text
 docker network ls
-NETWORK ID          NAME                DRIVER              SCOPE
-b192e8a7151a        demo_overlay_net    overlay             global
+NETWORK ID          NAME                      DRIVER              SCOPE
+27fab44006ec        demo_overlay_net          overlay             global
 ```
 
 Resulting volumes
@@ -151,11 +151,20 @@ local               node2/demo_data
 Resulting Consul containers
 ```text
 docker ps
-CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS              PORTS                                                                                                                                         NAMES
-f5e8d9b97a59        gliderlabs/consul-agent    "/bin/consul agent -c"   8 seconds ago        Up 7 seconds        192.168.99.104:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 192.168.99.104:8500->8500/tcp, 192.168.99.104:8600->53/udp   node2/agent1
-b41c1555a6b6        gliderlabs/consul-server   "/bin/consul agent -s"   40 seconds ago       Up 40 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                                          node1/server3
-26655ef213f6        gliderlabs/consul-server   "/bin/consul agent -s"   40 seconds ago       Up 40 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                                          node0/server2
-e38ff6ac6100        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                                          master0/server1
+CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS              PORTS                                                                                                                                                                                                                      NAMES
+12d33b43b119        gliderlabs/consul-agent    "/bin/consul agent -c"   About an hour ago   Up 59 minutes       192.168.99.102:53->53/tcp, 192.168.99.102:53->53/udp, 192.168.99.102:8300-8302->8300-8302/tcp, 192.168.99.102:8400->8400/tcp, 192.168.99.102:8500->8500/tcp, 192.168.99.102:8301-8302->8301-8302/udp, 8600/tcp, 8600/udp   node2/agent1
+84a0fef6e206        gliderlabs/consul-server   "/bin/consul agent -s"   About an hour ago   Up 59 minutes       192.168.99.103:53->53/tcp, 192.168.99.103:53->53/udp, 192.168.99.103:8300-8302->8300-8302/tcp, 192.168.99.103:8400->8400/tcp, 192.168.99.103:8500->8500/tcp, 192.168.99.103:8301-8302->8301-8302/udp, 8600/tcp, 8600/udp   node0/server2
+657df118725f        gliderlabs/consul-server   "/bin/consul agent -s"   About an hour ago   Up 59 minutes       192.168.99.104:53->53/tcp, 192.168.99.104:53->53/udp, 192.168.99.104:8300-8302->8300-8302/tcp, 192.168.99.104:8400->8400/tcp, 192.168.99.104:8500->8500/tcp, 192.168.99.104:8301-8302->8301-8302/udp, 8600/tcp, 8600/udp   node1/server3
+584075b1e229        gliderlabs/consul-server   "/bin/consul agent -s"   About an hour ago   Up 59 minutes       192.168.99.101:53->53/tcp, 192.168.99.101:53->53/udp, 192.168.99.101:8300-8302->8300-8302/tcp, 192.168.99.101:8400->8400/tcp, 192.168.99.101:8500->8500/tcp, 192.168.99.101:8301-8302->8301-8302/udp, 8600/tcp, 8600/udp   master0/server1
+```
+
+```text
+docker exec -t master0/server1 consul members
+Node     Address         Status  Type    Build  Protocol  DC
+agent1   10.0.9.14:8301  alive   client  0.6.4  2         dc1
+server1  10.0.9.11:8301  alive   server  0.6.4  2         dc1
+server2  10.0.9.12:8301  alive   server  0.6.4  2         dc1
+server3  10.0.9.13:8301  alive   server  0.6.4  2         dc1
 ```
 
 ![Consul UI Swarm](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_Swarm.png?raw=true)
