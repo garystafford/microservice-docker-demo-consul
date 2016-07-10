@@ -102,7 +102,7 @@ node1         -        virtualbox   Running   tcp://192.168.99.104:2376   master
 node2         -        virtualbox   Running   tcp://192.168.99.102:2376   master0            v1.12.0-rc3
 ```
 
-Resulting Docker Swarm containers
+Resulting Docker Swarm Containers
 ```text
 docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                     NAMES
@@ -138,7 +138,7 @@ NETWORK ID          NAME                      DRIVER              SCOPE
 27fab44006ec        demo_overlay_net          overlay             global
 ```
 
-Resulting volumes
+Resulting Volumes
 ```text
 docker volume ls
 DRIVER              VOLUME NAME
@@ -148,7 +148,7 @@ local               node1/demo_data
 local               node2/demo_data
 ```
 
-Resulting Consul containers
+Resulting Consul Containers
 ```text
 docker ps
 CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS              PORTS                                                                                                                                                                                                                      NAMES
@@ -158,6 +158,7 @@ CONTAINER ID        IMAGE                      COMMAND                  CREATED 
 584075b1e229        gliderlabs/consul-server   "/bin/consul agent -s"   About an hour ago   Up 59 minutes       192.168.99.101:53->53/tcp, 192.168.99.101:53->53/udp, 192.168.99.101:8300-8302->8300-8302/tcp, 192.168.99.101:8400->8400/tcp, 192.168.99.101:8500->8500/tcp, 192.168.99.101:8301-8302->8301-8302/udp, 8600/tcp, 8600/udp   master0/server1
 ```
 
+Resulting Cluster Members
 ```text
 docker exec -t master0/server1 consul members
 Node     Address         Status  Type    Build  Protocol  DC
