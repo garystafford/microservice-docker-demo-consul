@@ -231,7 +231,12 @@ system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && 
   VirtualBox 5.0.24r108355
 ```
 
+### TODOs
+* Document how to restart Swarm and Consul cluster in VirtualBox
+* Incorporate [Glider Labs' Registrator](https://hub.docker.com/r/gliderlabs/registrator/) for service registation
+
 ### References
+
 * https://hub.docker.com/r/progrium/consul/
 * https://docs.docker.com/engine/userguide/networking/get-started-overlay/
 * https://docs.docker.com/compose/compose-file/#/version-2
