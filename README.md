@@ -49,7 +49,9 @@ Setup multi-host Swarm keystore
 ```bash
 docker-machine create -d virtualbox consul0
 eval "$(docker-machine env consul0)"
-docker run -d -p "8500:8500" -h "consul" --name consul gliderlabs/consul-server -server -bootstrap
+docker run -d -p "8500:8500" -h "consul" \
+  --name consul gliderlabs/consul-server \
+  -server -bootstrap
 ```
 
 ![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI.png?raw=true)
