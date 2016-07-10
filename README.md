@@ -41,6 +41,7 @@ docker-compose -f docker-compose-test.yml -p demo up -d node2 node3 node4
 
 Results
 ```text
+docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                        NAMES
 9d30753bb100        progrium/consul     "/bin/start -server -"   8 minutes ago       Up 8 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                             node3
 7a73fba8fb8a        progrium/consul     "/bin/start -join 172"   8 minutes ago       Up 8 minutes        53/tcp, 0.0.0.0:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 0.0.0.0:8500->8500/tcp, 0.0.0.0:8600->53/udp   node4
@@ -54,7 +55,7 @@ Local Consul Links
 * [Consul UI](http://localhost:8500/ui): localhost:8500/ui
 
 #### Cluster on Swarm
-Four-node Consul cluster, (3) servers and (1) agent, on a multi-host Docker Swarm cluster. Uses overlay networking and persistent storage.
+Four-node Consul cluster, (3) servers and (1) agent, on a multi-host Docker Swarm cluster. Uses overlay networking and persistent storage. One node per host (_i.e. node1 on agent1_)
 
 Setup multi-host Swarm keystore
 ```bash
@@ -105,7 +106,7 @@ docker-machine create \
 
 Resulting Machines (VMs)
 ```text
-docker-machine ls | grep Running
+docker-machine ls
   NAME          ACTIVE   DRIVER       STATE     URL                         SWARM             DOCKER        ERRORS
   agent1        -        virtualbox   Running   tcp://192.168.99.108:2376   agent1 (master)   v1.12.0-rc3
   agent2        -        virtualbox   Running   tcp://192.168.99.109:2376   agent1            v1.12.0-rc3
@@ -116,7 +117,7 @@ docker-machine ls | grep Running
 
 Resulting Docker Swarm containers
 ``` text
-docker ps -a
+docker ps
   CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                     NAMES
   36d862e2a4bf        swarm:latest        "/swarm join --advert"   22 minutes ago      Up 22 minutes       2375/tcp                                  agent4/swarm-agent
   57ac46a80769        swarm:latest        "/swarm join --advert"   24 minutes ago      Up 24 minutes       2375/tcp                                  agent3/swarm-agent
@@ -130,8 +131,6 @@ Build Overlay Network
 eval $(docker-machine env --swarm agent1)
 docker network create --driver overlay --subnet=10.0.9.0/24 demo_overlay_net
 eval $(docker-machine env agent1)
-docker network ls
- > ec7a2e25ea1c        demo_overlay_net    overlay             global
 ```
 
 Deploy (4) node Consul cluster to multi-host Swarm cluster
@@ -144,9 +143,15 @@ docker-compose -f docker-compose-test-swarm.yml -p demo up -d node2 node3 node4
 docker network inspect demo_overlay_net # confirm (4) members
 ```
 
+Resulting Network
+```text
+docker network ls
+NETWORK ID          NAME                     DRIVER              SCOPE
+ec7a2e25ea1c        demo_overlay_net    overlay             global
+```
 Resulting volumes
 ```text
-docker volume ls | grep demo_data
+docker volume ls
   DRIVER              VOLUME NAME
   local               agent1/demo_data
   local               agent2/demo_data
