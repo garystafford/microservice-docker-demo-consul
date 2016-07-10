@@ -1,55 +1,95 @@
 version: "2"
 
 services:
-  node1:
-    image: "progrium/consul"
-    hostname: "node1"
-    container_name: "node1"
-    command: "-server -bootstrap-expect 3"
-    networks:
-     - demo_overlay_net
-    environment:
-      - "constraint:node==agent1"
-    volumes:
-      - data:/data
-
-  node2:
-    image: "progrium/consul"
-    hostname: "node2"
-    container_name: "node2"
-    command: "-server -join ${JOIN_IP}"
-    networks:
-     - demo_overlay_net
-    environment:
-      - "constraint:node==agent2"
-    volumes:
-      - data:/data
-
-  node3:
-    image: "progrium/consul"
-    hostname: "node3"
-    container_name: "node3"
-    command: "-server -join ${JOIN_IP}"
-    networks:
-     - demo_overlay_net
-    environment:
-      - "constraint:node==agent3"
-    volumes:
-      - data:/data
-
-  node4:
-    image: "progrium/consul"
-    hostname: "node4"
-    container_name: "node4"
+  server1:
+    image: "gliderlabs/consul-server"
+    hostname: "server1"
+    container_name: "server1"
     ports:
-      - "8400:8400"
-      - "8500:8500"
-      - "8600:53/udp"
-    command: "-join ${JOIN_IP} -ui-dir /ui"
+        - "53:53"
+        - "8300:8300"
+        - "8301:8301"
+        - "8302:8302"
+        - "8400:8400"
+        - "8500:8500"
+        - "53/udp:53/udp"
+        - "8301/udp:8301/udp"
+        - "8302/udp:8302/udp"
+    command: "-server -advertise 10.0.9.11 -bootstrap"
     networks:
-     - demo_overlay_net
+      demo_overlay_net:
+        ipv4_address: 10.0.9.11
     environment:
-      - "constraint:node==agent4"
+      - "constraint:node==master0"
+    volumes:
+      - data:/data
+
+  server2:
+    image: "gliderlabs/consul-server"
+    hostname: "server2"
+    container_name: "server2"
+    ports:
+        - "53:53"
+        - "8300:8300"
+        - "8301:8301"
+        - "8302:8302"
+        - "8400:8400"
+        - "8500:8500"
+        - "53/udp:53/udp"
+        - "8301/udp:8301/udp"
+        - "8302/udp:8302/udp"
+    command: "-server -advertise 10.0.9.12 -join ${JOIN_IP}"
+    networks:
+      demo_overlay_net:
+        ipv4_address: 10.0.9.12
+    environment:
+      - "constraint:node==node0"
+    volumes:
+      - data:/data
+
+  server3:
+    image: "gliderlabs/consul-server"
+    hostname: "server3"
+    container_name: "server3"
+    ports:
+        - "53:53"
+        - "8300:8300"
+        - "8301:8301"
+        - "8302:8302"
+        - "8400:8400"
+        - "8500:8500"
+        - "53/udp:53/udp"
+        - "8301/udp:8301/udp"
+        - "8302/udp:8302/udp"
+    command: "-server -advertise 10.0.9.13 -join ${JOIN_IP}"
+    networks:
+      demo_overlay_net:
+        ipv4_address: 10.0.9.13
+    environment:
+      - "constraint:node==node1"
+    volumes:
+      - data:/data
+
+  agent1:
+    image: "gliderlabs/consul-agent"
+    hostname: "agent1"
+    container_name: "agent1"
+    ports:
+        - "53:53"
+        - "8300:8300"
+        - "8301:8301"
+        - "8302:8302"
+        - "8400:8400"
+        - "8500:8500"
+        - "53/udp:53/udp"
+        - "8301/udp:8301/udp"
+        - "8302/udp:8302/udp"
+    command: " -advertise 10.0.9.14 -join ${JOIN_IP} -ui-dir /ui"
+    networks:
+      demo_overlay_net:
+        ipv4_address: 10.0.9.14
+    environment:
+      - "constraint:node==node2"
     volumes:
       - data:/data
 

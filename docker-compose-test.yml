@@ -1,28 +1,28 @@
 version: "2"
 
 services:
-  node1:
-    image: "progrium/consul"
-    hostname: "node1"
-    container_name: "node1"
+  server1:
+    image: "gliderlabs/consul-server"
+    hostname: "server1"
+    container_name: "server1"
     command: "-server -bootstrap-expect 3"
 
-  node2:
-    image: "progrium/consul"
-    hostname: "node2"
-    container_name: "node2"
+  server2:
+    image: "gliderlabs/consul-server"
+    hostname: "server2"
+    container_name: "server2"
     command: "-server -join ${JOIN_IP}"
 
-  node3:
-    image: "progrium/consul"
-    hostname: "node3"
-    container_name: "node3"
+  server3:
+    image: "gliderlabs/consul-server"
+    hostname: "server3"
+    container_name: "server3"
     command: "-server -join ${JOIN_IP}"
 
-  node4:
-    image: "progrium/consul"
-    hostname: "node4"
-    container_name: "node4"
+  agent1:
+    image: "gliderlabs/consul-agent"
+    hostname: "agent1"
+    container_name: "agent1"
     ports:
       - "8400:8400"
       - "8500:8500"

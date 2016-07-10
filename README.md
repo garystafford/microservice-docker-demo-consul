@@ -20,20 +20,20 @@ docker-compose -f docker-compose-dev.yml up -d
 #### Four-Node Cluster
 Four-node Consul cluster with (3) servers and (1) agent
 ```bash
-docker-compose -f docker-compose-test.yml -p demo up -d node1
-export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.demo_default.IPAddress }}' node1)"
+docker-compose -f docker-compose-test.yml -p demo up -d server1
+export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.demo_default.IPAddress }}' server1)"
 echo ${JOIN_IP}
-docker-compose -f docker-compose-test.yml -p demo up -d node2 node3 node4
+docker-compose -f docker-compose-test.yml -p demo up -d server2 server3 agent1
 ```
 
 Results
 ```text
 docker ps
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                        NAMES
-9d30753bb100        progrium/consul     "/bin/start -server -"   8 minutes ago       Up 8 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                             node3
-7a73fba8fb8a        progrium/consul     "/bin/start -join 172"   8 minutes ago       Up 8 minutes        53/tcp, 0.0.0.0:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 0.0.0.0:8500->8500/tcp, 0.0.0.0:8600->53/udp   node4
-fd6a71c9addf        progrium/consul     "/bin/start -server -"   8 minutes ago       Up 8 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                             node2
-5c7436d46310        progrium/consul     "/bin/start -server -"   8 minutes ago       Up 8 minutes        53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                             node1
+CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS              PORTS                                                                                                                    NAMES
+745cb8b0cf6e        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server2
+7ce07e7e92df        gliderlabs/consul-agent    "/bin/consul agent -c"   16 seconds ago       Up 15 seconds       0.0.0.0:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:8500->8500/tcp, 0.0.0.0:8600->53/udp   agent1
+ac542653fd34        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server3
+db053d540c64        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server1
 ```
 
 Local Consul Links  
@@ -42,18 +42,15 @@ Local Consul Links
 * [Consul UI](http://localhost:8500/ui): localhost:8500/ui
 
 #### Multi-Host Cluster with Swarm
-Four-node Consul cluster, (3) servers and (1) agent, on a multi-host Docker Swarm cluster. Uses overlay networking and persistent storage. One node per host (_i.e. node1 on agent1_)
+Four-node Consul cluster, (3) servers and (1) agent, on a multi-host Docker Swarm cluster. Uses overlay networking and persistent storage. One node per host (_i.e. server1 on master0_)
 
 Setup multi-host Swarm keystore
 ```bash
-docker-machine create -d virtualbox mh-keystore
+docker-machine create -d virtualbox consul0
 
-eval "$(docker-machine env mh-keystore)"
+eval "$(docker-machine env consul0)"
 
-docker run -d \
-  -p "8500:8500" \
-  -h "consul" \
-  progrium/consul -server -bootstrap
+docker run -d -p "8500:8500" -h "consul" --name consul gliderlabs/consul-server -server -bootstrap
 ```
 
 ![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_Swarm.png?raw=true)
@@ -63,72 +60,73 @@ Setup (4) Docker Machine hosts for Docker Swarm cluster
 docker-machine create \
   -d virtualbox \
   --swarm --swarm-master \
-  --swarm-discovery="consul://$(docker-machine ip mh-keystore):8500" \
-  --engine-opt="cluster-store=consul://$(docker-machine ip mh-keystore):8500" \
+  --swarm-discovery="consul://$(docker-machine ip consul0):8500" \
+  --engine-opt="cluster-store=consul://$(docker-machine ip consul0):8500" \
   --engine-opt="cluster-advertise=eth1:2376" \
-  agent1
+  master0
 
 docker-machine create \
   -d virtualbox \
   --swarm \
-  --swarm-discovery="consul://$(docker-machine ip mh-keystore):8500" \
-  --engine-opt="cluster-store=consul://$(docker-machine ip mh-keystore):8500" \
+  --swarm-discovery="consul://$(docker-machine ip consul0):8500" \
+  --engine-opt="cluster-store=consul://$(docker-machine ip consul0):8500" \
   --engine-opt="cluster-advertise=eth1:2376" \
-  agent2
+  node0
 
 docker-machine create \
   -d virtualbox \
   --swarm \
-  --swarm-discovery="consul://$(docker-machine ip mh-keystore):8500" \
-  --engine-opt="cluster-store=consul://$(docker-machine ip mh-keystore):8500" \
+  --swarm-discovery="consul://$(docker-machine ip consul0):8500" \
+  --engine-opt="cluster-store=consul://$(docker-machine ip consul0):8500" \
   --engine-opt="cluster-advertise=eth1:2376" \
-  agent3
+  node1
 
 docker-machine create \
   -d virtualbox \
   --swarm \
-  --swarm-discovery="consul://$(docker-machine ip mh-keystore):8500" \
-  --engine-opt="cluster-store=consul://$(docker-machine ip mh-keystore):8500" \
+  --swarm-discovery="consul://$(docker-machine ip consul0):8500" \
+  --engine-opt="cluster-store=consul://$(docker-machine ip consul0):8500" \
   --engine-opt="cluster-advertise=eth1:2376" \
-  agent4
+  node2
 ```
 
 Resulting Machines (VMs)
 ```text
 docker-machine ls
-  NAME          ACTIVE   DRIVER       STATE     URL                         SWARM             DOCKER        ERRORS
-  agent1        -        virtualbox   Running   tcp://192.168.99.108:2376   agent1 (master)   v1.12.0-rc3
-  agent2        -        virtualbox   Running   tcp://192.168.99.109:2376   agent1            v1.12.0-rc3
-  agent3        -        virtualbox   Running   tcp://192.168.99.110:2376   agent1            v1.12.0-rc3
-  agent4        -        virtualbox   Running   tcp://192.168.99.111:2376   agent1            v1.12.0-rc3
-  mh-keystore   *        virtualbox   Running   tcp://192.168.99.105:2376                     v1.12.0-rc3
+NAME          ACTIVE   DRIVER       STATE     URL                         SWARM              DOCKER        ERRORS
+consul0       *        virtualbox   Running   tcp://192.168.99.100:2376                      v1.12.0-rc3
+master0       -        virtualbox   Running   tcp://192.168.99.101:2376   master0 (master)   v1.12.0-rc3
+node0         -        virtualbox   Running   tcp://192.168.99.102:2376   master0            v1.12.0-rc3
+node1         -        virtualbox   Running   tcp://192.168.99.103:2376   master0            v1.12.0-rc3
+node2         -        virtualbox   Running   tcp://192.168.99.104:2376   master0            v1.12.0-rc3
 ```
 
 Resulting Docker Swarm containers
 ``` text
 docker ps
-  CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                     NAMES
-  36d862e2a4bf        swarm:latest        "/swarm join --advert"   22 minutes ago      Up 22 minutes       2375/tcp                                  agent4/swarm-agent
-  57ac46a80769        swarm:latest        "/swarm join --advert"   24 minutes ago      Up 24 minutes       2375/tcp                                  agent3/swarm-agent
-  c29c2143dbe0        swarm:latest        "/swarm join --advert"   25 minutes ago      Up 25 minutes       2375/tcp                                  agent2/swarm-agent
-  032359303fab        swarm:latest        "/swarm join --advert"   26 minutes ago      Up 26 minutes       2375/tcp                                  agent1/swarm-agent
-  bb34ce9a30c8        swarm:latest        "/swarm manage --tlsv"   26 minutes ago      Up 26 minutes       2375/tcp, 192.168.99.108:3376->3376/tcp   agent1/swarm-agent-master
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                     NAMES
+e6edfc92a0df        swarm:latest        "/swarm join --advert"   11 minutes ago      Up 11 minutes       2375/tcp                                  node2/swarm-agent
+81960dfae82d        swarm:latest        "/swarm join --advert"   12 minutes ago      Up 12 minutes       2375/tcp                                  node1/swarm-agent
+bb302d9451ee        swarm:latest        "/swarm join --advert"   13 minutes ago      Up 13 minutes       2375/tcp                                  node0/swarm-agent
+69fda652a704        swarm:latest        "/swarm join --advert"   14 minutes ago      Up 14 minutes       2375/tcp                                  master0/swarm-agent
+2f8018faccdb        swarm:latest        "/swarm manage --tlsv"   14 minutes ago      Up 14 minutes       2375/tcp, 192.168.99.101:3376->3376/tcp   master0/swarm-agent-master
 ```
 
 Build Overlay Network
 ```bash
-eval $(docker-machine env --swarm agent1)
+eval $(docker-machine env --swarm master0)
 docker network create --driver overlay --subnet=10.0.9.0/24 demo_overlay_net
-eval $(docker-machine env agent1)
+eval $(docker-machine env master0)
 ```
 
 Deploy (4) node Consul cluster to multi-host Swarm cluster
 ```bash
-DOCKER_HOST=$(docker-machine ip agent1):3376
-docker-compose -f docker-compose-test-swarm.yml -p demo up -d node1
-export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.demo_overlay_net.IPAddress }}' node1)"
+DOCKER_HOST=$(docker-machine ip master0):3376
+env | grep DOCKER # confirm env vars
+docker-compose -f docker-compose-test-swarm.yml -p demo up -d server1
+export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.demo_overlay_net.IPAddress }}' server1)"
 echo ${JOIN_IP}
-docker-compose -f docker-compose-test-swarm.yml -p demo up -d node2 node3 node4
+docker-compose -f docker-compose-test-swarm.yml -p demo up -d server2 server3 agent1
 docker network inspect demo_overlay_net # confirm (4) members
 ```
 
@@ -136,26 +134,27 @@ Resulting Network
 ```text
 docker network ls
 NETWORK ID          NAME                DRIVER              SCOPE
-ec7a2e25ea1c        demo_overlay_net    overlay             global
+b192e8a7151a        demo_overlay_net    overlay             global
 ```
+
 Resulting volumes
 ```text
 docker volume ls
-  DRIVER              VOLUME NAME
-  local               agent1/demo_data
-  local               agent2/demo_data
-  local               agent3/demo_data
-  local               agent4/demo_data
+DRIVER              VOLUME NAME
+local               master0/demo_data
+local               node0/demo_data
+local               node1/demo_data
+local               node2/demo_data
 ```
 
 Resulting Consul containers
 ```text
 docker ps
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                                                             NAMES
-8a0af74866ce        progrium/consul     "/bin/start -server -"   25 minutes ago      Up 25 minutes       53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent3/node3
-efe920bbc230        progrium/consul     "/bin/start -server -"   25 minutes ago      Up 25 minutes       53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent2/node2
-6541b9db4b54        progrium/consul     "/bin/start -join 10."   25 minutes ago      Up 25 minutes       53/tcp, 192.168.99.111:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 192.168.99.111:8500->8500/tcp, 192.168.99.111:8600->53/udp   agent4/node4
-21143f1a643a        progrium/consul     "/bin/start -server -"   25 minutes ago      Up 25 minutes       53/tcp, 53/udp, 8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp                                                                  agent1/node1
+CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS              PORTS                                                                                                                                         NAMES
+f5e8d9b97a59        gliderlabs/consul-agent    "/bin/consul agent -c"   8 seconds ago        Up 7 seconds        192.168.99.104:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 192.168.99.104:8500->8500/tcp, 192.168.99.104:8600->53/udp   node2/agent1
+b41c1555a6b6        gliderlabs/consul-server   "/bin/consul agent -s"   40 seconds ago       Up 40 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                                          node1/server3
+26655ef213f6        gliderlabs/consul-server   "/bin/consul agent -s"   40 seconds ago       Up 40 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                                          node0/server2
+e38ff6ac6100        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                                          master0/server1
 ```
 
 ![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI.png?raw=true)
@@ -182,18 +181,24 @@ system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && 
 
 Clean up all project containers and volumes
 ```bash
-docker rm -f node1 node2 node3 node4 # delete all Consul nodes
-docker rm -f agent1/node1 agent2/node2 agent3/node3 agent4/node4 # for Swarm version
+docker rm -f server1 server2 server3 agent1 # delete all Consul nodes
+docker rm -f master0/server1 node0/server2 node1/server3 node2/agent1 # for Swarm version
 docker volume rm $(docker volume ls -qf dangling=true) # remove unused local volumes
 docker network rm demo_overlay_net
+```
+
+Clean up all project machines
+```bash
+docker-machine rm master0 node0 node1 node4 consul0
+eval $(docker-machine env --unset)
 ```
 
 Useful commands
 ```bash
 dig @0.0.0.0 -p 8600 node1.node.consul
-docker exec -t node1 consul info
-docker exec -t node1 consul members
-docker logs node1
+docker exec -t master0/server1 consul info
+docker exec -t master0/server1 consul members
+docker logs master0/server1
 docker network inspect demo_overlay_net
 docker volume rm $(docker volume ls -qf dangling=true) # remove unused local volumes
 docker exec -t node2 consul leave # leave cluster
@@ -209,3 +214,5 @@ brew install Caskroom/cask/consul-cli
 * https://docs.docker.com/engine/userguide/networking/get-started-overlay/
 * https://docs.docker.com/compose/compose-file/#/version-2
 * https://www.consul.io/docs/
+* https://docs.docker.com/swarm/install-manual/
+* https://github.com/gliderlabs/registrator/issues/349

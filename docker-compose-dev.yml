@@ -1,10 +1,10 @@
 version: "2"
 
 services:
-  node1:
-    image: "progrium/consul"
-    hostname: "node1"
-    container_name: "node1"
+  server1:
+    image: "gliderlabs/consul-server"
+    hostname: "server1"
+    container_name: "server1"
     ports:
       - "8400:8400"
       - "8500:8500"
