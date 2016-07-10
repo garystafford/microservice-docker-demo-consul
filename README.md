@@ -2,7 +2,7 @@
 
 Containerized versions Consul, using the [progrium/consul](https://hub.docker.com/r/progrium/consul/) Docker Image. Individual Docker run commands from the [progrium/consul](https://hub.docker.com/r/progrium/consul/) instructions have been converted into Version 2 Docker Compose files, using latest Docker toolkit versions. Includes instructions for setting up a multi-host Docker Swarm environment, for a Consul cluster. Currently, uses VirtualBox VMs as hosts.
 
-![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI.png?raw=true)
+![Consul UI Swarm](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_Swarm.png?raw=true)
 
 ### Set-Up Options
 Docker Compose versions:  
@@ -35,6 +35,7 @@ CONTAINER ID        IMAGE                      COMMAND                  CREATED 
 ac542653fd34        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server3
 db053d540c64        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server1
 ```
+![Consul UI No Swarm](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_No_Swarm.png?raw=true)
 
 Local Consul Links  
 * [Consul Nodes](http://localhost:8500/v1/catalog/nodes): localhost:8500/v1/catalog/nodes
@@ -53,7 +54,7 @@ eval "$(docker-machine env consul0)"
 docker run -d -p "8500:8500" -h "consul" --name consul gliderlabs/consul-server -server -bootstrap
 ```
 
-![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_Swarm.png?raw=true)
+![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI.png?raw=true)
 
 Setup (4) Docker Machine hosts for Docker Swarm cluster
 ```bash
@@ -157,7 +158,7 @@ b41c1555a6b6        gliderlabs/consul-server   "/bin/consul agent -s"   40 secon
 e38ff6ac6100        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                                          master0/server1
 ```
 
-![Consul UI](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI.png?raw=true)
+![Consul UI Swarm](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_Swarm.png?raw=true)
 
 URLs on my local machine to Consul UI's
 * Multi-host Swarm keystore: http://192.168.99.105:8500/ui/#/dc1/nodes/consul
