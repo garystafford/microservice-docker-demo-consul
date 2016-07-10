@@ -24,13 +24,13 @@ system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && 
   VirtualBox 5.0.24r108355
 ```
 
-##### Single Node
+#### Single Node
 Single Consul server node
 ```bash
 docker-compose -f docker-compose-dev.yml up -d
 ```
 
-##### Cluster
+#### Cluster
 Four-node Consul cluster with (3) servers and (1) agent
 ```bash
 docker-compose -f docker-compose-test.yml -p demo up -d node1
@@ -53,7 +53,7 @@ Local Consul Links
 * [Key/Value Pairs](http://localhost:8500/v1/kv/?recurse): localhost:8500/v1/kv/?recurse
 * [Consul UI](http://localhost:8500/ui): localhost:8500/ui
 
-##### Cluster on Swarm
+#### Cluster on Swarm
 Four-node Consul cluster, (3) servers and (1) agent, on a multi-host Docker Swarm cluster. Uses overlay networking and persistent storage.
 
 Setup multi-host Swarm keystore
