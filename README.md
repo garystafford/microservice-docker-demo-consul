@@ -161,8 +161,8 @@ e38ff6ac6100        gliderlabs/consul-server   "/bin/consul agent -s"   About a 
 ![Consul UI Swarm](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_Swarm.png?raw=true)
 
 URLs on my local machine to Consul UI's
-* Multi-host Swarm keystore: http://192.168.99.105:8500/ui/#/dc1/nodes/consul
-* Containerized Consul cluster: http://192.168.99.111:8500/ui/#/dc1/services/consul
+* Multi-host Swarm keystore: http://192.168.99.104:8500/ui/#/dc1/nodes/consul
+* Containerized Consul cluster: http://192.168.99.100:8500/ui/#/dc1/services/consul
 
 ### Misc Items
 Software versions used for this project, all latest as of 2016-07-09
