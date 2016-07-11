@@ -1,3 +1,10 @@
+## Restart Swarm Cluster and Consul Cluster
+_Work in progress! Not fully tested..._
+
+How to restart Swarm cluster with VirtualBox, after system restart. Since it uses DHCP, there is no
+ guarantee that the IP addresses of the VMs will be the same. Must regen certs
+ and rebuild Swarm containers.
+
 ```bash
 docker-machine start consul0
 docker-machine regenerate-certs consul0
