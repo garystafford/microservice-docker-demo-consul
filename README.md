@@ -29,11 +29,11 @@ docker-compose -f docker-compose-test.yml -p demo up -d server2 server3 agent1
 Results
 ```text
 docker ps
-  CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS              PORTS                                                                                                                    NAMES
-  745cb8b0cf6e        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server2
-  7ce07e7e92df        gliderlabs/consul-agent    "/bin/consul agent -c"   16 seconds ago       Up 15 seconds       0.0.0.0:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:8500->8500/tcp, 0.0.0.0:8600->53/udp   agent1
-  ac542653fd34        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server3
-  db053d540c64        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server1
+CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS              PORTS                                                                                                                    NAMES
+745cb8b0cf6e        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server2
+7ce07e7e92df        gliderlabs/consul-agent    "/bin/consul agent -c"   16 seconds ago       Up 15 seconds       0.0.0.0:8400->8400/tcp, 8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:8500->8500/tcp, 0.0.0.0:8600->53/udp   agent1
+ac542653fd34        gliderlabs/consul-server   "/bin/consul agent -s"   16 seconds ago       Up 15 seconds       8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server3
+db053d540c64        gliderlabs/consul-server   "/bin/consul agent -s"   About a minute ago   Up About a minute   8300-8302/tcp, 8400/tcp, 8500/tcp, 8301-8302/udp, 8600/tcp, 8600/udp                                                     server1
 ```
 ![Consul UI No Swarm](https://github.com/garystafford/consul-docker-swarm-compose/blob/master/previews/Consul_UI_No_Swarm.png?raw=true)
 
