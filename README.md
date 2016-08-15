@@ -1,3 +1,5 @@
+# microservice-docker-demo-consul
+
 ## Containerize Consul with Docker Compose and Swarm
 
 Various containerized Consul cluster configurations, using [gliderlabs/consul](https://github.com/gliderlabs/docker-consul/tree/master/0.6) Docker Images. Individual Docker run commands from the [progrium/consul](https://hub.docker.com/r/progrium/consul/) instructions have been converted into Version 2 Docker Compose files. Includes instructions are included for setting up a multi-host Docker Swarm environment, for a Consul cluster. Currently, uses VirtualBox VMs as hosts.
@@ -244,3 +246,4 @@ system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && 
 * https://docs.docker.com/swarm/install-manual/
 * https://github.com/gliderlabs/registrator/issues/349
 * https://github.com/JoergM/consul-examples/tree/master/http_api
+* https://releases.hashicorp.com/consul/
