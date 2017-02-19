@@ -3,11 +3,17 @@
 set -ex
 
 # ##############################################################################
-# Setup (4) Docker Machine hosts for Docker Swarm cluster
-vms=( "manager1" "worker1" "worker2" "worker3" "worker4" "worker5" )
+# Setup Docker Machine hosts for Docker swarm cluster
+hosts=( "manager1" "worker1" "worker2"
+        "worker3" "worker4" "worker5" )
 for vm in "${vms[@]}"
 do
-  docker-machine create -d virtualbox ${vm}
+  docker-machine create \
+    --driver virtualbox \
+    --virtualbox-memory "1024" \
+    --virtualbox-cpu-count "1" \
+    --virtualbox-ui-type "headless" \
+    ${vm}
 done
 
 docker-machine ls | grep Running
@@ -37,7 +43,7 @@ WORKER_SWARM_JOIN=$(docker-machine ssh manager1 "docker swarm join-token worker"
 # --token SWMTKN-1-0fb1vo984vaimgy0z92aggj3esle9c0mkcawxuock77dbad5d9-4ygmbejelg1hndio86cvy4wrh \
 # 192.168.99.104:2377
 
-for vm in "${vms[@]}"
+for vm in "${hosts[@]}"
 do
   docker-machine ssh ${vm} ${WORKER_SWARM_JOIN}
 done
@@ -56,6 +62,102 @@ docker node ls
 
 # https://github.com/hashicorp/consul/issues/1465
 # https://github.com/hashicorp/consul/issues/725
+
+i=0
+consul_agents=( "consul-server1" )
+
+for vm in ${vms[0]}
+do
+  docker-machine env ${vm}
+  eval $(docker-machine env ${vm})
+  docker rm -f $(docker ps -a -q)
+
+  docker run -d \
+    --net=host \
+    --hostname ${consul_agents[i]} \
+    --name ${consul_agents[i]} \
+    --env "SERVICE_IGNORE=true" \
+    --env "CONSUL_CLIENT_INTERFACE=eth0" \
+    --env "CONSUL_BIND_INTERFACE=eth1" \
+    --volume data:/consul/data \
+    --publish 8300:8300 \
+    --publish 8301:8301 \
+    --publish 8301:8301/udp \
+    --publish 8302:8302 \
+    --publish 8302:8302/udp \
+    --publish 8400:8400 \
+    --publish 8500:8500 \
+    --publish 53:53/udp \
+    consul:latest \
+    consul agent -server -ui -bootstrap-expect=3 -client=0.0.0.0 -bind=${MANAGER_IP} -data-dir=/tmp/consul
+    let "i++"
+done
+
+i=0
+consul_agents=( "consul-server2" "consul-server3" )
+
+for vm in "${vms[@]:1:2}"
+do
+  docker-machine env ${vm}
+  eval $(docker-machine env ${vm})
+  docker rm -f $(docker ps -a -q)
+
+  docker run -d \
+    --net=host \
+    --hostname ${consul_agents[i]} \
+    --name ${consul_agents[i]} \
+    --env "SERVICE_IGNORE=true" \
+    --env "CONSUL_CLIENT_INTERFACE=eth0" \
+    --env "CONSUL_BIND_INTERFACE=eth1" \
+    --volume data:/consul/data \
+    --publish 8300:8300 \
+    --publish 8301:8301 \
+    --publish 8301:8301/udp \
+    --publish 8302:8302 \
+    --publish 8302:8302/udp \
+    --publish 8400:8400 \
+    --publish 8500:8500 \
+    --publish 53:53/udp \
+    consul:latest \
+    consul agent -server -bind='{{ GetInterfaceIP "eth1" }}' -retry-join=${MANAGER_IP} -data-dir=/tmp/consul
+
+    let "i++"
+done
+
+i=0
+consul_agents=( "consul-agent1" "consul-agent2" "consul-agent3" )
+
+for vm in ${vms[@]:3:3}
+do
+  docker-machine env ${vm}
+  eval $(docker-machine env ${vm})
+  docker rm -f $(docker ps -a -q)
+
+  docker run -d \
+    --net=host \
+    --hostname ${consul_agents[i]} \
+    --name ${consul_agents[i]} \
+    --env "SERVICE_IGNORE=true" \
+    --env "CONSUL_CLIENT_INTERFACE=eth0" \
+    --env "CONSUL_BIND_INTERFACE=eth1" \
+    --volume data:/consul/data \
+    --publish 8300:8300 \
+    --publish 8301:8301 \
+    --publish 8301:8301/udp \
+    --publish 8302:8302 \
+    --publish 8302:8302/udp \
+    --publish 8400:8400 \
+    --publish 8500:8500 \
+    --publish 53:53/udp \
+    consul \
+    consul agent -bind='{{ GetInterfaceIP "eth1" }}' -retry-join=${MANAGER_IP} -data-dir=/tmp/consul
+
+    let "i++"
+done
+
+
+
+
 
 docker-machine env manager1
 eval $(docker-machine env manager1)
