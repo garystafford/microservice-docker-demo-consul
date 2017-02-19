@@ -2,25 +2,25 @@ version: "2"
 
 services:
   server1:
-    image: "gliderlabs/consul-server"
+    image: "gliderlabs/consul-server:latest"
     hostname: "server1"
     container_name: "server1"
     command: "-server -bootstrap-expect 3"
 
   server2:
-    image: "gliderlabs/consul-server"
+    image: "gliderlabs/consul-server:latest"
     hostname: "server2"
     container_name: "server2"
     command: "-server -join ${JOIN_IP}"
 
   server3:
-    image: "gliderlabs/consul-server"
+    image: "gliderlabs/consul-server:latest"
     hostname: "server3"
     container_name: "server3"
     command: "-server -join ${JOIN_IP}"
 
   agent1:
-    image: "gliderlabs/consul-agent"
+    image: "gliderlabs/consul-agent:latest"
     hostname: "agent1"
     container_name: "agent1"
     ports:

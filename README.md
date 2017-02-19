@@ -196,7 +196,7 @@ docker network rm demo_overlay_net
 
 Clean up all project machines
 ```bash
-docker-machine rm master0 node0 node1 node4 consul0
+docker-machine rm master0 node0 node1 node2 consul0
 eval $(docker-machine env --unset)
 ```
 
@@ -239,11 +239,13 @@ system_profiler SPSoftwareDataType | grep "System Version" | awk '{$1=$1};1' && 
 
 ### References
 
-* https://hub.docker.com/r/progrium/consul/
-* https://docs.docker.com/engine/userguide/networking/get-started-overlay/
+* http://gliderlabs.com/registrator/latest/user/services/
 * https://docs.docker.com/compose/compose-file/#/version-2
-* https://www.consul.io/docs/
+* https://docs.docker.com/engine/userguide/networking/get-started-overlay/
+* https://docs.docker.com/swarm/discovery/
 * https://docs.docker.com/swarm/install-manual/
 * https://github.com/gliderlabs/registrator/issues/349
 * https://github.com/JoergM/consul-examples/tree/master/http_api
+* https://hub.docker.com/r/progrium/consul/
 * https://releases.hashicorp.com/consul/
+* https://www.consul.io/docs/

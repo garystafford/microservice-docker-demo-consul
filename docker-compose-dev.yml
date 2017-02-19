@@ -2,7 +2,7 @@ version: "2"
 
 services:
   server1:
-    image: "gliderlabs/consul-server"
+    image: "gliderlabs/consul-server:latest"
     hostname: "server1"
     container_name: "server1"
     ports:

@@ -1,0 +1,123 @@
+version: "3"
+
+services:
+  server1:
+    image: "garystafford/consul-server:latest"
+    hostname: "server1"
+    ports:
+        - "53:53"
+        - "8300:8300"
+        - "8301:8301"
+        - "8302:8302"
+        - "8400:8400"
+        - "8500:8500"
+        # - "53/udp:53/udp"
+        # - "8301/udp:8301/udp"
+        # - "8302/udp:8302/udp"
+    command: "-server -advertise 10.0.9.11 -bootstrap"
+    networks:
+      consul_overlay_net:
+        ipv4_address: 10.0.9.11
+    deploy:
+      placement:
+        constraints: [node.hostname == manager1]
+    environment:
+      - "SERVICE_IGNORE=true"
+    volumes:
+      - data:/data
+  #
+  # server2:
+  #   image: "garystafford/consul-server:latest"
+  #   hostname: "server2"
+  #   ports:
+  #       - "53:53"
+  #       - "8300:8300"
+  #       - "8301:8301"
+  #       - "8302:8302"
+  #       - "8400:8400"
+  #       - "8500:8500"
+  #       # - "53/udp:53/udp"
+  #       # - "8301/udp:8301/udp"
+  #       # - "8302/udp:8302/udp"
+  #   command: "-server -advertise 10.0.9.12 -join ${JOIN_IP}"
+  #   networks:
+  #     consul_overlay_net:
+  #       ipv4_address: 10.0.9.12
+  #   deploy:
+  #     placement:
+  #       constraints: [node.hostname == worker1]
+  #   environment:
+  #     - "SERVICE_IGNORE=true"
+  #   volumes:
+  #     - data:/data
+  #
+  # server3:
+  #   image: "garystafford/consul-server:latest"
+  #   hostname: "server3"
+  #   ports:
+  #       - "53:53"
+  #       - "8300:8300"
+  #       - "8301:8301"
+  #       - "8302:8302"
+  #       - "8400:8400"
+  #       - "8500:8500"
+  #       # - "53/udp:53/udp"
+  #       # - "8301/udp:8301/udp"
+  #       # - "8302/udp:8302/udp"
+  #   command: "-server -advertise 10.0.9.13 -join ${JOIN_IP}"
+  #   networks:
+  #     consul_overlay_net:
+  #       ipv4_address: 10.0.9.13
+  #   deploy:
+  #     placement:
+  #       constraints: [node.hostname == worker2]
+  #   environment:
+  #     - "SERVICE_IGNORE=true"
+  #   volumes:
+  #     - data:/data
+  #
+  # agent1:
+  #   image: "garystafford/consul-agent:latest"
+  #   hostname: "agent1"
+  #   ports:
+  #       - "53:53"
+  #       - "8300:8300"
+  #       - "8301:8301"
+  #       - "8302:8302"
+  #       - "8400:8400"
+  #       - "8500:8500"
+  #       # - "53/udp:53/udp"
+  #       # - "8301/udp:8301/udp"
+  #       # - "8302/udp:8302/udp"
+  #   command: "-advertise 10.0.9.14 -join ${JOIN_IP} -ui-dir /ui"
+  #   networks:
+  #     consul_overlay_net:
+  #       ipv4_address: 10.0.9.14
+  #   deploy:
+  #     placement:
+  #       constraints: [node.hostname == worker3]
+  #   environment:
+  #     - "SERVICE_IGNORE=true"
+  #   volumes:
+  #     - data:/data
+  #
+  # registrator:
+  #   image: "garystafford/registrator:latest"
+  #   hostname: "registrator"
+  #   network_mode: "host"
+  #   deploy:
+  #     placement:
+  #       constraints: [node.hostname != manager1]
+  #   environment:
+  #     - "SERVICE_IGNORE=true"
+  #   volumes:
+  #     - /var/run/docker.sock:/tmp/docker.sock
+  #   command: "consul://localhost:8500"
+
+networks:
+  consul_overlay_net:
+    external: true
+
+volumes:
+  data:
+    external: true

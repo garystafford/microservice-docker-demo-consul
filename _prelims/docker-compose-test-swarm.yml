@@ -2,7 +2,7 @@ version: "2"
 
 services:
   server1:
-    image: "gliderlabs/consul-server"
+    image: "gliderlabs/consul-server:latest"
     hostname: "server1"
     container_name: "server1"
     ports:
@@ -20,12 +20,13 @@ services:
       demo_overlay_net:
         ipv4_address: 10.0.9.11
     environment:
-      - "constraint:node==master0"
+      - "constraint:node.hostname == master0"
+      - "SERVICE_IGNORE=true"
     volumes:
       - data:/data
 
   server2:
-    image: "gliderlabs/consul-server"
+    image: "gliderlabs/consul-server:latest"
     hostname: "server2"
     container_name: "server2"
     ports:
@@ -43,12 +44,13 @@ services:
       demo_overlay_net:
         ipv4_address: 10.0.9.12
     environment:
-      - "constraint:node==node0"
+      - "constraint:node.hostname == node0"
+      - "SERVICE_IGNORE=true"
     volumes:
       - data:/data
 
   server3:
-    image: "gliderlabs/consul-server"
+    image: "gliderlabs/consul-server:latest"
     hostname: "server3"
     container_name: "server3"
     ports:
@@ -66,12 +68,13 @@ services:
       demo_overlay_net:
         ipv4_address: 10.0.9.13
     environment:
-      - "constraint:node==node1"
+      - "constraint:node.hostname == node1"
+      - "SERVICE_IGNORE=true"
     volumes:
       - data:/data
 
   agent1:
-    image: "gliderlabs/consul-agent"
+    image: "gliderlabs/consul-agent:latest"
     hostname: "agent1"
     container_name: "agent1"
     ports:
@@ -84,14 +87,26 @@ services:
         - "53/udp:53/udp"
         - "8301/udp:8301/udp"
         - "8302/udp:8302/udp"
-    command: " -advertise 10.0.9.14 -join ${JOIN_IP} -ui-dir /ui"
+    command: "-advertise 10.0.9.14 -join ${JOIN_IP} -ui-dir /ui"
     networks:
       demo_overlay_net:
         ipv4_address: 10.0.9.14
     environment:
-      - "constraint:node==node2"
+      - "constraint:node.hostname == node2"
+      - "SERVICE_IGNORE=true"
     volumes:
       - data:/data
+
+  registrator:
+    image: "gliderlabs/registrator:latest"
+    hostname: "registrator"
+    network_mode: "host"
+    environment:
+      - "constraint:node.hostname != master0"
+      - "SERVICE_IGNORE=true"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    command: "consul://localhost:8500"
 
 networks:
   demo_overlay_net:
@@ -99,4 +114,4 @@ networks:
 
 volumes:
   data:
-    # external: true
+    external: true

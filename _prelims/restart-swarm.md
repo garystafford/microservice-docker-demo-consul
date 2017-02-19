@@ -11,7 +11,10 @@ docker-machine regenerate-certs consul0
 eval "$(docker-machine env consul0)"
 docker start consul
 
+========================================================
+
 docker-machine start master0 node0 node1 node2
+docker-machine upgrade master0 node0 node1 node2
 docker-machine regenerate-certs master0 node0 node1 node2
 
 eval "$(docker-machine env master0)"
