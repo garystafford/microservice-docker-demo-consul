@@ -99,18 +99,18 @@ services:
     volumes:
       - data:/consul/data
   #
-  # registrator:
-  #   image: "gliderlabs/registrator:latest"
-  #   hostname: "registrator"
-  #   networks:
-  #     - consul_overlay_net
-  #   deploy:
-  #     mode: global
-  #     placement:
-  #       constraints: [node.hostname != manager1]
-  #   volumes:
-  #     - /var/run/docker.sock:/tmp/docker.sock
-  #   command: "-internal consul://192.168.99.104:8500"
+  registrator:
+    image: "gliderlabs/registrator:latest"
+    hostname: "registrator"
+    networks:
+      - consul_overlay_net
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.hostname != manager1]
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    command: "-internal consul://192.168.99.104:8500"
 
 networks:
   consul_overlay_net:

@@ -45,3 +45,12 @@ http 192.168.99.104:8500/v1/catalog/service/candidate-service
 
 docker node ls
 docker-machine ssh manager1 "docker stack ps voter_stack"
+
+for i in {1..100} ; do
+  KEY=$(openssl rand -hex 4)
+  VALUE=$(openssl rand -hex 64)
+  echo ${KEY}
+  echo ${VALUE}
+
+  curl -X PUT -d @- 192.168.99.104:8500/v1/kv/tmp/value/${KEY} <<< ${VALUE}
+done
