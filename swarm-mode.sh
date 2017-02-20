@@ -191,7 +191,6 @@ done
 
 # ##############################################################################
 
-
 # This node joined a swarm as a worker.
 
 docker-machine ssh manager1 "docker node ls"
@@ -211,20 +210,13 @@ docker network create \
 # Create data volume
 docker volume create --name=data
 
-# Deploy (4) node Consul cluster to multi-host Swarm cluster
-DOCKER_HOST=$(docker-machine ip manager1):3376
-env | grep DOCKER # confirm env vars
+# ##############################################################################
 
-# docker stack deploy --compose-file=docker-compose-test-swarm-mode.yml consul_stack
-docker stack deploy --compose-file=docker-compose-swarm-mode.yml consul_stack
+for i in {1..100} ; do
+  KEY=$(openssl rand -hex 8)
+  VALUE=$(openssl rand -hex 256)
+  echo ${KEY}
+  echo ${VALUE}
 
-docker-compose -f docker-compose-test-swarm-mode.yml -p consul up -d server1
-export JOIN_IP="$(docker inspect --format '{{ .NetworkSettings.Networks.consul_overlay_net.IPAddress }}' server1)"
-echo ${JOIN_IP}
-docker-compose -f docker-compose-test-swarm.yml -p demo up -d server2
-docker-compose -f docker-compose-test-swarm.yml -p demo up -d server3
-docker-compose -f docker-compose-test-swarm.yml -p demo up -d agent1
-docker network inspect consul_overlay_net # confirm (4) members
-
-
-docker -H ${DOCKER_HOST} info
+  curl -X PUT -d @- ${HOST_IP}:8500/v1/kv/tmp/value/${KEY} <<< ${VALUE}
+done
