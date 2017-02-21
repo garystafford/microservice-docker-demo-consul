@@ -13,6 +13,7 @@ do
     --virtualbox-memory "1024" \
     --virtualbox-cpu-count "1" \
     --virtualbox-ui-type "headless" \
+    --engine-label role=app
     ${vm}
 done
 
@@ -48,6 +49,13 @@ do
   docker-machine ssh ${vm} ${WORKER_SWARM_JOIN}
 done
 
+docker-machine env manager1
+eval $(docker-machine env manager1)
+for vm in ${vms[@]:3:3}
+do
+  docker node update ${vm} --label-add app=true
+done
+
 docker node ls
 
 # ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
@@ -69,6 +77,8 @@ do
   docker-machine env ${vm}
   eval $(docker-machine env ${vm})
   docker rm -f $(docker ps -a -q)
+  docker network prune -f
+  docker volume prune -f
 done
 
 # initial consul server
@@ -94,7 +104,7 @@ docker run -d \
   --publish 8500:8500 \
   --publish 172.17.0.1:53:53/udp \
   consul:0.7.5 \
-  consul agent -server -ui -bootstrap-expect=3 -client=0.0.0.0 -advertise=${MANAGER_IP} -data-dir="/tmp/consul"
+  consul agent -server -ui -bootstrap-expect=3 -client=0.0.0.0 -advertise=${MANAGER_IP} -data-dir="/consul/data"
 
 # next consul servers
 consul_agents=( "consul-server2" "consul-server3" )
@@ -122,7 +132,7 @@ do
     --publish 8500:8500 \
     --publish 172.17.0.1:53:53/udp \
     consul:0.7.5 \
-    consul agent -server -ui -client=0.0.0.0 -advertise='{{ GetInterfaceIP "eth1" }}' -retry-join=${MANAGER_IP} -data-dir="/tmp/consul"
+    consul agent -server -ui -client=0.0.0.0 -advertise='{{ GetInterfaceIP "eth1" }}' -retry-join=${MANAGER_IP} -data-dir="/consul/data"
   let "i++"
 done
 
@@ -152,7 +162,7 @@ do
     --publish 8500:8500 \
     --publish 172.17.0.1:53:53/udp \
     consul:0.7.5 \
-    consul agent -client=0.0.0.0 -advertise='{{ GetInterfaceIP "eth1" }}' -retry-join=${MANAGER_IP} -data-dir="/tmp/consul"
+    consul agent -client=0.0.0.0 -advertise='{{ GetInterfaceIP "eth1" }}' -retry-join=${MANAGER_IP} -data-dir="/consul/data"
   let "i++"
 done
 
@@ -161,8 +171,8 @@ done
 docker-machine env manager1
 eval $(docker-machine env manager1)
 docker logs consul-server1
-docker exec -it consul-server1 consul members
 docker exec -it consul-server1 consul info
+docker exec -it consul-server1 consul members
 
 # ##############################################################################
 
@@ -173,17 +183,13 @@ do
   eval $(docker-machine env ${vm})
   docker rm -f registrator
 
-  HOST_IP=$(docker-machine ssh ${vm} ifconfig eth1 | \
-    grep 'inet addr' | \
-    awk '{ print $2  }' | \
-    grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+  HOST_IP=$(docker-machine ip ${vm})
 
   echo ${HOST_IP}
 
   docker run -d \
     --name=registrator \
     --net=host \
-    --network=consul_overlay_net \
     --volume=/var/run/docker.sock:/tmp/docker.sock \
     gliderlabs/registrator:latest \
       -internal consul://${HOST_IP}:8500
