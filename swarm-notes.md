@@ -44,6 +44,9 @@ curl -s http://192.168.99.104:8500/v1/catalog/service/consul | jq .
 curl -s http://192.168.99.104:8500/v1/catalog/service/consul?pretty
 http 192.168.99.104:8500/v1/catalog/service/candidate-service
 
+curl -s ${HOST_IP}:8500/v1/kv/tmp/value/826c7ab14ca7abe3?raw
+
+
 docker node ls
 docker-machine ssh manager1 "docker stack ps voter_stack"
 

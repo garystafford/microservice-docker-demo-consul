@@ -218,7 +218,8 @@ docker volume create --name=data
 
 # ##############################################################################
 
-for i in {1..100} ; do
+HOST_IP=$(docker-machine ip manager1)
+for i in {1..10} ; do
   KEY=$(openssl rand -hex 8)
   VALUE=$(openssl rand -hex 256)
   echo ${KEY}
