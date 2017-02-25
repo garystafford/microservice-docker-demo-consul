@@ -9,14 +9,14 @@ services:
     ports:
     - 8097:8097/tcp
     networks:
-      - consul_overlay_net
+    - voter_overlay_net
     deploy:
       mode: global
       placement:
-        constraints: [node.labels.app == true]
+        constraints: [node.labels.purpose == backend]
     environment:
-      - "SERVICE_NAME=candidate-service"
-      - "SERVICE_TAGS=service"
+    - "SERVICE_NAME=candidate-service"
+    - "SERVICE_TAGS=service"
 
   voter:
     image: garystafford/voter-service:0.2.103
@@ -27,14 +27,14 @@ services:
     ports:
     - 8099:8099/tcp
     networks:
-      - consul_overlay_net
+    - voter_overlay_net
     deploy:
       mode: global
       placement:
-        constraints: [node.labels.app == true]
+        constraints: [node.labels.purpose == backend]
     environment:
-      - "SERVICE_NAME=voter-service"
-      - "SERVICE_TAGS=service"
+    - "SERVICE_NAME=voter-service"
+    - "SERVICE_TAGS=service"
 
   mongodb:
     image: mongo:latest
@@ -44,17 +44,21 @@ services:
     ports:
     - 27017:27017/tcp
     networks:
-      - consul_overlay_net
+    - voter_overlay_net
+    volumes:
+    - voter_data_vol:/data/db
     deploy:
       replicas: 1
       placement:
-        constraints: [node.labels.app == true]
+        constraints: [node.labels.purpose == backend]
     environment:
-      - "SERVICE_NAME=mongodb"
-      - "SERVICE_TAGS=database"
+    - "SERVICE_NAME=mongodb"
+    - "SERVICE_TAGS=database"
 
 networks:
-  consul_overlay_net:
+  voter_overlay_net:
     external: true
 
-volumes: {}
+volumes:
+  voter_data_vol:
+    external: true
