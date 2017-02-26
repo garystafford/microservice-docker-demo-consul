@@ -5,7 +5,7 @@
 set -e
 
 docker service create \
-  --name=viz \
+  --name=swarm-visualizer \
   --publish=5001:8080/tcp \
   --constraint=node.role==manager \
   --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
