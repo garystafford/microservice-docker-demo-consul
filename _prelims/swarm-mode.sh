@@ -26,7 +26,7 @@ docker-machine ls
 # docker swarm leave --force
 # rm -rf /var/lib/docker/swarm/*
 
-SWARM_MANAGER_IP=$(docker-machine ip ${vms[0]})
+SWARM_MANAGER_IP=$(docker-machine ip manager1)
 echo ${SWARM_MANAGER_IP}
 docker-machine ssh manager1 \
   "docker swarm init --advertise-addr \
@@ -42,15 +42,15 @@ MANAGER_SWARM_JOIN=$(docker-machine ssh ${vms[0]} "docker swarm join-token manag
   MANAGER_SWARM_JOIN=$(echo ${MANAGER_SWARM_JOIN//\\/''})
 echo ${MANAGER_SWARM_JOIN}
 
-WORKER_SWARM_JOIN=$(docker-machine ssh manager1 "docker swarm join-token worker") && \
-  WORKER_SWARM_JOIN=$(echo ${WORKER_SWARM_JOIN} | grep -E "(docker).*(2377)" -o) && \
-  WORKER_SWARM_JOIN=$(echo ${WORKER_SWARM_JOIN//\\/''})
-echo ${WORKER_SWARM_JOIN}
-
 for vm in ${vms[@]:1:2}
 do
   docker-machine ssh ${vm} ${MANAGER_SWARM_JOIN}
 done
+
+WORKER_SWARM_JOIN=$(docker-machine ssh manager1 "docker swarm join-token worker") && \
+  WORKER_SWARM_JOIN=$(echo ${WORKER_SWARM_JOIN} | grep -E "(docker).*(2377)" -o) && \
+  WORKER_SWARM_JOIN=$(echo ${WORKER_SWARM_JOIN//\\/''})
+echo ${WORKER_SWARM_JOIN}
 
 for vm in ${vms[@]:3:3}
 do
@@ -124,8 +124,8 @@ do
   let "i++"
 done
 
-# consul agents
-consul_agents=( "consul-agent1" "consul-agent2" "consul-agent3" )
+# consul clients
+consul_clients=( "consul-client1" "consul-client2" "consul-client3" )
 i=0
 for vm in ${vms[@]:3:3}
 do
@@ -135,8 +135,8 @@ do
 
   docker run -d \
     --net=host \
-    --hostname ${consul_agents[i]} \
-    --name ${consul_agents[i]} \
+    --hostname ${consul_clients[i]} \
+    --name ${consul_clients[i]} \
     --env "SERVICE_IGNORE=true" \
     --env "CONSUL_CLIENT_INTERFACE=eth0" \
     --env "CONSUL_BIND_INTERFACE=eth1" \
@@ -193,14 +193,14 @@ docker network create \
   --attachable=true \
   voter_overlay_net
 
-  # Create data volume
-  for vm in "${vms[@]}"
-  do
-    docker-machine env ${vm}
-    eval $(docker-machine env ${vm})
-    # docker volume prune -f
-    docker volume create --name=voter_data_vol
-  done
+# Create data volume
+for vm in "${vms[@]}"
+do
+  docker-machine env ${vm}
+  eval $(docker-machine env ${vm})
+  # docker volume prune -f
+  docker volume create --name=voter_data_vol
+done
 
 # ##############################################################################
 
@@ -228,8 +228,9 @@ done
 # ##############################################################################
 
 # random k/v pairs
-docker-machine ip manager1
-CONSUL_SERVER_IP=$(docker-machine ip $(docker node ls | grep Leader | awk '{print $3}'))
+docker-machine env ${vms[0]}
+eval $(docker-machine env ${vms[0]})
+export CONSUL_SERVER=$(docker-machine ip $(docker node ls | grep Leader | awk '{print $3}'))
 
 for i in {1..10} ; do
   KEY=$(openssl rand -hex 8)
@@ -237,31 +238,31 @@ for i in {1..10} ; do
   echo ${KEY}
   echo ${VALUE}
 
-  curl -X PUT -d @- ${CONSUL_SERVER_IP}:8500/v1/kv/tmp/value/${KEY} <<< ${VALUE}
+  curl -X PUT -d @- ${CONSUL_SERVER}:8500/v1/kv/tmp/value/${KEY} <<< ${VALUE}
 done
 
 # spring profiles as yaml k/v pairs
-# docker-machine ip manager1
-# HOST_IP=$(docker-machine ip manager1)
-CONSUL_SERVER_IP=$(docker-machine ip $(docker node ls | grep Leader | awk '{print $3}'))
+docker-machine env ${vms[0]}
+eval $(docker-machine env ${vms[0]})
+export CONSUL_SERVER=$(docker-machine ip $(docker node ls | grep Leader | awk '{print $3}'))
 
 KEY="config/widget-service/data"
 VALUE="consul-configs/default.yaml"
 curl -X PUT --data-binary @${VALUE} \
   -H "Content-type: text/x-yaml" \
-  ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
+  ${CONSUL_SERVER}:8500/v1/kv/${KEY}
 
 KEY="config/widget-service/docker-local/data"
 VALUE="consul-configs/docker-local.yaml"
 curl -X PUT --data-binary @${VALUE} \
   -H "Content-type: text/x-yaml" \
-  ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
+  ${CONSUL_SERVER}:8500/v1/kv/${KEY}
 
 KEY="config/widget-service/docker-production/data"
 VALUE="consul-configs/docker-production.yaml"
 curl -X PUT --data-binary @${VALUE} \
   -H "Content-type: text/x-yaml" \
-  ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
+  ${CONSUL_SERVER}:8500/v1/kv/${KEY}
 
 # ##############################################################################
 
