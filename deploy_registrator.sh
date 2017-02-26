@@ -20,5 +20,5 @@ do
     --net=host \
     --volume=/var/run/docker.sock:/tmp/docker.sock \
     gliderlabs/registrator:latest \
-      -internal consul://${HOST_IP}:8500
+      -internal consul://${HOST_IP:localhost}:8500
 done
