@@ -61,8 +61,8 @@ docker node ls
 
 # ##############################################################################
 
-docker-machine env manager1
-eval $(docker-machine env manager1)
+docker-machine env ${vms[0]}
+eval $(docker-machine env ${vms[0]})
 for vm in ${vms[@]:3:3}
 do
   docker node update ${vm} --label-add app=true
@@ -246,13 +246,28 @@ done
 CONSUL_SERVER_IP=$(docker-machine ip $(docker node ls | grep Leader | awk '{print $3}'))
 
 KEY="config/widget-service/data"
-VALUE="/Users/gstaffo/Documents/projects/widget-docker-demo/widget-service/consul-configs/default.yaml"
-curl -X PUT --data-binary @${VALUE} -H "Content-type: text/x-yaml" ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
+VALUE="consul-configs/default.yaml"
+curl -X PUT --data-binary @${VALUE} \
+  -H "Content-type: text/x-yaml" \
+  ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
 
 KEY="config/widget-service/docker-local/data"
-VALUE="/Users/gstaffo/Documents/projects/widget-docker-demo/widget-service/consul-configs/docker-local.yaml"
-curl -X PUT --data-binary @${VALUE} -H "Content-type: text/x-yaml" ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
+VALUE="consul-configs/docker-local.yaml"
+curl -X PUT --data-binary @${VALUE} \
+  -H "Content-type: text/x-yaml" \
+  ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
 
 KEY="config/widget-service/docker-production/data"
-VALUE="/Users/gstaffo/Documents/projects/widget-docker-demo/widget-service/consul-configs/docker-production.yaml"
-curl -X PUT --data-binary @${VALUE} -H "Content-type: text/x-yaml" ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
+VALUE="consul-configs/docker-production.yaml"
+curl -X PUT --data-binary @${VALUE} \
+  -H "Content-type: text/x-yaml" \
+  ${CONSUL_SERVER_IP}:8500/v1/kv/${KEY}
+
+# ##############################################################################
+
+docker service create \
+  --name=viz \
+  --publish=5001:8080/tcp \
+  --constraint=node.role==manager \
+  --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+  manomarks/visualizer:latest
