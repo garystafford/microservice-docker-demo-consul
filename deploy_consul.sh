@@ -3,15 +3,18 @@
 # Installs Consul Agents on all nodes in swarm
 # (3) Consul Server Agents and (3) Consul Client Agents
 
-set -e
+# set -e
 
 vms=( "manager1" "manager2" "manager3"
       "worker1" "worker2" "worker3" )
 
+SWARM_MANAGER_IP=$(docker-machine ip manager1)
+echo ${SWARM_MANAGER_IP}
+
 # initial consul server
 consul_server="consul-server1"
 
-docker-machine env manager1}
+docker-machine env manager1
 eval $(docker-machine env manager1)
 
 docker run -d \
@@ -29,7 +32,7 @@ docker run -d \
 # next two consul servers
 consul_servers=( "consul-server2" "consul-server3" )
 i=0
-for vm in "${vms[@]:1:2}"
+for vm in ${vms[@]:1:2}
 do
   docker-machine env ${vm}
   eval $(docker-machine env ${vm})
@@ -55,7 +58,6 @@ for vm in ${vms[@]:3:3}
 do
   docker-machine env ${vm}
   eval $(docker-machine env ${vm})
-  docker rm -f $(docker ps -a -q)
 
   docker run -d \
     --net=host \
@@ -70,6 +72,8 @@ do
   let "i++"
 done
 
-docker-machine env manager1}
+docker-machine env manager1
 eval $(docker-machine env manager1)
 docker exec -it consul-server1 consul members
+
+echo "Script completed..."

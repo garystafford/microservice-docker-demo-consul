@@ -19,3 +19,5 @@ do
 done
 
 docker-machine ls
+
+echo "Script completed..."

@@ -86,6 +86,9 @@ do
 done
 
 # initial consul server
+SWARM_MANAGER_IP=$(docker-machine ip manager1)
+echo ${SWARM_MANAGER_IP}
+
 consul_server="consul-server1"
 docker-machine env ${vms[0]}
 eval $(docker-machine env ${vms[0]})

@@ -4,11 +4,15 @@
 
 set -e
 
+vms=( "manager1" "manager2" "manager3"
+      "worker1" "worker2" "worker3" )
+
 SWARM_MANAGER_IP=$(docker-machine ip manager1)
 echo ${SWARM_MANAGER_IP}
 
 docker-machine ssh manager1 \
-  "docker swarm init --advertise-addr ${SWARM_MANAGER_IP}"
+  "docker swarm init \
+  --advertise-addr ${SWARM_MANAGER_IP}"
 
 docker-machine env manager1
 eval $(docker-machine env manager1)
@@ -36,3 +40,5 @@ do
 done
 
 docker node ls
+
+echo "Script completed..."

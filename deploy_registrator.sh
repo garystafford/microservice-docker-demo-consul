@@ -22,3 +22,5 @@ do
     gliderlabs/registrator:latest \
       -internal consul://${HOST_IP:localhost}:8500
 done
+
+echo "Script completed..."
