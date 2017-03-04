@@ -1,0 +1,40 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# https://jlordiales.me/2015/02/03/registrator/
+# https://atlas.hashicorp.com/centos/boxes/7
+
+VAGRANTFILE_API_VERSION = '2'.freeze
+
+# hosts = {
+#   manager1: '192.168.50.10',
+#   manager2: '192.168.50.11',
+#   manager3: '192.168.50.12',
+#   worker1:  '192.168.50.20',
+#   worker2:  '192.168.50.21',
+#   worker3:  '192.168.50.22'
+# }
+
+require 'yaml'
+machines = YAML.load_file('machines.yml')
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  machines.each do |machine|
+    puts "Host Name: #{machine['name']}"
+    puts "Host IP: #{machine['ip']}"
+
+    config.vm.box = 'ubuntu/xenial64'
+
+    config.vm.provider 'virtualbox' do |vb|
+      vb.name = machine['name']
+    end
+
+    config.vm.define machine['name'] do |host|
+      host.vm.hostname = machine['name']
+      host.vm.network 'private_network', ip: machine['ip']
+      host.vm.provision 'shell', inline: 'ip addr'
+    end
+
+    config.vm.provision 'docker'
+  end
+end
