@@ -1,2 +1,6 @@
-.vagrant/
-*.log
+**/.vagrant
+**.log
+terraform/.terraform/
+terraform.tfstate.backup
+**.tfstate
+.DS_Store
