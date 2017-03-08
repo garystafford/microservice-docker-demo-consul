@@ -3,7 +3,7 @@ resource "aws_security_group" "consul" {
   name   = "security-group-consul"
   description = "Security group for Consul"
 
-  vpc_id = "${aws_vpc.default.id}"
+  vpc_id = "${aws_vpc.consul.id}"
 
   ingress {
       from_port = 0
@@ -27,8 +27,8 @@ resource "aws_security_group" "consul" {
   }
 }
 
-# manager1
-resource "aws_instance" "consul-server1" {
+# server1
+resource "aws_instance" "consul-server-1" {
   connection {
     user        = "ubuntu"
     private_key = "${file("~/.ssh/consul_aws_rsa")}"
@@ -40,20 +40,71 @@ resource "aws_instance" "consul-server1" {
   availability_zone = "us-east-1a"
   count             = "1"
 
-  key_name               = "${aws_key_pair.auth.id}"
+  key_name               = "${aws_key_pair.consul_auth.id}"
   vpc_security_group_ids = ["${aws_security_group.consul.id}"]
-  subnet_id              = "${aws_subnet.consul-servers.id}"
+  subnet_id              = "${aws_subnet.consul_1.id}"
 
   tags {
     Owner       = "${var.owner}"
     Terraform   = true
     Environment = "${var.environment}"
-    Name        = "tf-instance-consul-server1"
+    Name        = "tf-instance-consul-server-1"
   }
 }
 
-# worker1
-resource "aws_instance" "consul-worker1" {
+# server2
+resource "aws_instance" "consul-server-2" {
+  connection {
+    user        = "ubuntu"
+    private_key = "${file("~/.ssh/consul_aws_rsa")}"
+    timeout     = "${connection_timeout}"
+  }
+
+  ami               = "${lookup(var.aws_amis_base, var.aws_region)}"
+  instance_type     = "t2.nano"
+  availability_zone = "us-east-1b"
+  count             = "1"
+
+  key_name               = "${aws_key_pair.consul_auth.id}"
+  vpc_security_group_ids = ["${aws_security_group.consul.id}"]
+  subnet_id              = "${aws_subnet.consul_2.id}"
+
+  tags {
+    Owner       = "${var.owner}"
+    Terraform   = true
+    Environment = "${var.environment}"
+    Name        = "tf-instance-consul-server-2"
+  }
+}
+
+
+# server3
+resource "aws_instance" "consul-server-3" {
+  connection {
+    user        = "ubuntu"
+    private_key = "${file("~/.ssh/consul_aws_rsa")}"
+    timeout     = "${connection_timeout}"
+  }
+
+  ami               = "${lookup(var.aws_amis_base, var.aws_region)}"
+  instance_type     = "t2.nano"
+  availability_zone = "us-east-1c"
+  count             = "1"
+
+  key_name               = "${aws_key_pair.consul_auth.id}"
+  vpc_security_group_ids = ["${aws_security_group.consul.id}"]
+  subnet_id              = "${aws_subnet.consul_3.id}"
+
+  tags {
+    Owner       = "${var.owner}"
+    Terraform   = true
+    Environment = "${var.environment}"
+    Name        = "tf-instance-consul-server-3"
+  }
+}
+
+/*# client1
+resource "aws_instance" "consul-client1" {
   connection {
     user        = "ubuntu"
     private_key = "${file("~/.ssh/consul_aws_rsa")}"
@@ -67,12 +118,12 @@ resource "aws_instance" "consul-worker1" {
 
   key_name               = "${aws_key_pair.auth.id}"
   vpc_security_group_ids = ["${aws_security_group.consul.id}"]
-  subnet_id              = "${aws_subnet.consul-workers.id}"
+  subnet_id              = "${aws_subnet.consul_2.id}"
 
   tags {
     Owner       = "${var.owner}"
     Terraform   = true
     Environment = "${var.environment}"
-    Name        = "tf-instance-consul-worker1"
+    Name        = "tf-instance-consul-client1"
   }
-}
+}*/

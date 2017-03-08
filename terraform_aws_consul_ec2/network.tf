@@ -1,6 +1,6 @@
 # Create an internet gateway to give our subnet access to the outside world
-resource "aws_internet_gateway" "default" {
-  vpc_id = "${aws_vpc.default.id}"
+resource "aws_internet_gateway" "consul" {
+  vpc_id = "${aws_vpc.consul.id}"
 
   tags {
     Owner       = "${var.owner}"
@@ -12,15 +12,14 @@ resource "aws_internet_gateway" "default" {
 
 # Grant the VPC internet access on its main route table
 resource "aws_route" "internet_access" {
-  route_table_id         = "${aws_vpc.default.main_route_table_id}"
+  route_table_id         = "${aws_vpc.consul.main_route_table_id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.default.id}"
+  gateway_id             = "${aws_internet_gateway.consul.id}"
 }
 
-# Create a public subnet for consul-servers
-resource "aws_subnet" "consul-servers" {
-  vpc_id                  = "${aws_vpc.default.id}"
-  cidr_block              = "${var.consul-servers_subnet_cidr}"
+resource "aws_subnet" "consul_1" {
+  vpc_id                  = "${aws_vpc.consul.id}"
+  cidr_block              = "${var.consul_subnet_cidr1}"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 
@@ -28,35 +27,34 @@ resource "aws_subnet" "consul-servers" {
     Owner       = "${var.owner}"
     Terraform   = true
     Environment = "${var.environment}"
-    Name        = "tf-subnet-consul-servers"
+    Name        = "tf-subnet-consul-1"
   }
 }
 
-resource "aws_route_table" "consul-servers" {
-    vpc_id = "${aws_vpc.default.id}"
+resource "aws_route_table" "consul_1" {
+    vpc_id = "${aws_vpc.consul.id}"
 
     route {
         cidr_block = "0.0.0.0/0"
-        gateway_id = "${aws_internet_gateway.default.id}"
+        gateway_id = "${aws_internet_gateway.consul.id}"
     }
 
     tags {
       Owner       = "${var.owner}"
       Terraform   = true
       Environment = "${var.environment}"
-      Name        = "tf-route-table-consul-servers"
+      Name        = "tf-route-table-consul-1"
     }
 }
 
-resource "aws_route_table_association" "consul-servers" {
-    subnet_id      = "${aws_subnet.consul-servers.id}"
-    route_table_id = "${aws_route_table.consul-servers.id}"
+resource "aws_route_table_association" "consul_1" {
+    subnet_id      = "${aws_subnet.consul_1.id}"
+    route_table_id = "${aws_route_table.consul_1.id}"
 }
 
-# Create a public subnet for consul-workers
-resource "aws_subnet" "consul-workers" {
-  vpc_id                  = "${aws_vpc.default.id}"
-  cidr_block              = "${var.consul-workers_subnet_cidr}"
+resource "aws_subnet" "consul_2" {
+  vpc_id                  = "${aws_vpc.consul.id}"
+  cidr_block              = "${var.consul_subnet_cidr2}"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
 
@@ -64,27 +62,62 @@ resource "aws_subnet" "consul-workers" {
     Owner       = "${var.owner}"
     Terraform   = true
     Environment = "${var.environment}"
-    Name        = "tf-subnet-consul-workers"
+    Name        = "tf-subnet-consul-2"
   }
 }
 
-resource "aws_route_table" "consul-workers" {
-    vpc_id = "${aws_vpc.default.id}"
+resource "aws_route_table" "consul_2" {
+    vpc_id = "${aws_vpc.consul.id}"
 
     route {
         cidr_block = "0.0.0.0/0"
-        gateway_id = "${aws_internet_gateway.default.id}"
+        gateway_id = "${aws_internet_gateway.consul.id}"
     }
 
     tags {
       Owner       = "${var.owner}"
       Terraform   = true
       Environment = "${var.environment}"
-      Name        = "tf-route-table-consul-workers"
+      Name        = "tf-route-table-consul-2"
     }
 }
 
-resource "aws_route_table_association" "consul-workers" {
-    subnet_id      = "${aws_subnet.consul-workers.id}"
-    route_table_id = "${aws_route_table.consul-workers.id}"
+resource "aws_route_table_association" "consul_2" {
+    subnet_id      = "${aws_subnet.consul_2.id}"
+    route_table_id = "${aws_route_table.consul_2.id}"
+}
+
+resource "aws_subnet" "consul_3" {
+  vpc_id                  = "${aws_vpc.consul.id}"
+  cidr_block              = "${var.consul_subnet_cidr3}"
+  availability_zone       = "us-east-1c"
+  map_public_ip_on_launch = true
+
+  tags {
+    Owner       = "${var.owner}"
+    Terraform   = true
+    Environment = "${var.environment}"
+    Name        = "tf-subnet-consul-3"
+  }
+}
+
+resource "aws_route_table" "consul_3" {
+    vpc_id = "${aws_vpc.consul.id}"
+
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = "${aws_internet_gateway.consul.id}"
+    }
+
+    tags {
+      Owner       = "${var.owner}"
+      Terraform   = true
+      Environment = "${var.environment}"
+      Name        = "tf-route-table-consul-3"
+    }
+}
+
+resource "aws_route_table_association" "consul_3" {
+    subnet_id      = "${aws_subnet.consul_3.id}"
+    route_table_id = "${aws_route_table.consul_3.id}"
 }
