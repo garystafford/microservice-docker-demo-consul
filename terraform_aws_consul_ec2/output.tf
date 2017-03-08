@@ -1,11 +1,11 @@
-/*output "aws_subnet.pubSubnetAz1" {
-  value = "${aws_subnet.pubSubnetAz1.id}"
+output "consul-server-1.public_ip" {
+  value = "${aws_instance.consul-server-1.public_ip}"
 }
 
-output "aws_subnet.pubSubnetAz2" {
-  value = "${aws_subnet.pubSubnetAz2.id}"
+output "consul-server-2.public_ip" {
+  value = "${aws_instance.consul-server-2.public_ip}"
 }
 
-output "aws_subnet.pubSubnetAz3" {
-  value = "${aws_subnet.pubSubnetAz3.id}"
-}*/
+output "consul-server-3.public_ip" {
+  value = "${aws_instance.consul-server-3.public_ip}"
+}

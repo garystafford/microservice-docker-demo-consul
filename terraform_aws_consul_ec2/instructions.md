@@ -119,9 +119,9 @@ aws cloudformation create-stack \
 aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE
 aws cloudformation delete-stack --stack-name consul-demo
 aws ec2 describe-instances --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
-aws ec2 describe-instances --filters Name='tag:Name,Values=tf-instance-consul-server1' --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
+aws ec2 describe-instances --filters Name='tag:Name,Values=tf-instance-consul-server-1' --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
 tf-instance-test-docker-ce
-aws ec2 describe-instances --filters Name='tag:Name,Values=tf-instance-consul-server1' --output text --query 'Reservations[*].Instances[*].PrivateIpAddress'
+aws ec2 describe-instances --filters Name='tag:Name,Values=tf-instance-consul-server-1' --output text --query 'Reservations[*].Instances[*].PrivateIpAddress'
 ```
 
 ## References
