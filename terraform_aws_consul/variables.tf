@@ -20,6 +20,11 @@ variable "vpc_cidr" {
   default = "10.0.0.0/16"
 }
 
+/*variable "consul_subnet_public_cidr" {
+  description = "CIDR for the Consul Subnet 1"
+  default = "10.0.0.0/24"
+}*/
+
 variable "consul_subnet_cidr1" {
   description = "CIDR for the Consul Subnet 1"
   default = "10.0.1.0/24"
@@ -41,6 +46,13 @@ variable "aws_amis_base" {
     us-east-1 = "ami-b26ec9a4"
   }
 }
+
+/*variable "aws_amis_nat" {
+  description = "Default AMIs by region for NAT instances"
+  default = {
+    us-east-1 = "ami-863b6391"
+  }
+}*/
 
 variable "owner" {
   description = "Infrastructure Owner"

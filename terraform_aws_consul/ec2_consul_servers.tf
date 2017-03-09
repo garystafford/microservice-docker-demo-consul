@@ -1,34 +1,5 @@
-# Public security group for the Web UI
-resource "aws_security_group" "consul" {
-  name   = "security-group-consul"
-  description = "Security group for Consul"
-
-  vpc_id = "${aws_vpc.consul.id}"
-
-  ingress {
-      from_port = 0
-      to_port = 0
-      protocol = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-      from_port = 0
-      to_port = 0
-      protocol = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags {
-    Owner       = "${var.owner}"
-    Terraform   = true
-    Environment = "${var.environment}"
-    Name        = "tf-security-group-consul"
-  }
-}
-
 # server1
-resource "aws_instance" "consul-server-1" {
+resource "aws_instance" "consul_server_1" {
   connection {
     user        = "ubuntu"
     private_key = "${file("~/.ssh/consul_aws_rsa")}"
@@ -41,7 +12,7 @@ resource "aws_instance" "consul-server-1" {
   count             = "1"
 
   key_name               = "${aws_key_pair.consul_auth.id}"
-  vpc_security_group_ids = ["${aws_security_group.consul.id}"]
+  vpc_security_group_ids = ["${aws_security_group.consul.id}", "${aws_security_group.consul_internet_access.id}"]
   subnet_id              = "${aws_subnet.consul_1.id}"
 
   tags {
@@ -53,7 +24,7 @@ resource "aws_instance" "consul-server-1" {
 }
 
 # server2
-resource "aws_instance" "consul-server-2" {
+resource "aws_instance" "consul_server_2" {
   connection {
     user        = "ubuntu"
     private_key = "${file("~/.ssh/consul_aws_rsa")}"
@@ -66,7 +37,7 @@ resource "aws_instance" "consul-server-2" {
   count             = "1"
 
   key_name               = "${aws_key_pair.consul_auth.id}"
-  vpc_security_group_ids = ["${aws_security_group.consul.id}"]
+  vpc_security_group_ids = ["${aws_security_group.consul.id}", "${aws_security_group.consul_internet_access.id}"]
   subnet_id              = "${aws_subnet.consul_2.id}"
 
   tags {
@@ -79,7 +50,7 @@ resource "aws_instance" "consul-server-2" {
 
 
 # server3
-resource "aws_instance" "consul-server-3" {
+resource "aws_instance" "consul_server_3" {
   connection {
     user        = "ubuntu"
     private_key = "${file("~/.ssh/consul_aws_rsa")}"
@@ -92,7 +63,7 @@ resource "aws_instance" "consul-server-3" {
   count             = "1"
 
   key_name               = "${aws_key_pair.consul_auth.id}"
-  vpc_security_group_ids = ["${aws_security_group.consul.id}"]
+  vpc_security_group_ids = ["${aws_security_group.consul.id}", "${aws_security_group.consul_internet_access.id}"]
   subnet_id              = "${aws_subnet.consul_3.id}"
 
   tags {

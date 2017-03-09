@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# *** DOES NOT WORK ***
+# *** HASH METHOD DOES NOT WORK WITH VAGRANT ***
 # https://jlordiales.me/2015/02/03/registrator/
 # https://atlas.hashicorp.com/centos/boxes/7
 

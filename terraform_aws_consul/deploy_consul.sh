@@ -1,9 +1,11 @@
 # Used by all Consul clients
 export CONSUL_SERVER_IP=$(aws ec2 describe-instances --filters Name='tag:Name,Values=tf-instance-consul-server-1' --output text --query 'Reservations[*].Instances[*].PrivateIpAddress')
+echo ${CONSUL_SERVER_IP}
 
 ############################################################
 # deploy consul-server-1
 export CONSUL_SERVER_PUBLIC_1_IP=$(aws ec2 describe-instances --filters Name='tag:Name,Values=tf-instance-consul-server-1' --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
+echo ${CONSUL_SERVER_PUBLIC_1_IP}
 
 ssh -i ~/.ssh/consul_aws_rsa ubuntu@${CONSUL_SERVER_PUBLIC_1_IP} "echo export CONSUL_SERVER_IP=${CONSUL_SERVER_IP} >> ~/.bashrc"
 
@@ -96,8 +98,3 @@ docker run -d \
   consul agent -client=0.0.0.0 -advertise='{{ GetInterfaceIP "eth0" }}' -retry-join=${CONSUL_SERVER_IP} -data-dir="/consul/data"
 
 docker exec -it consul-client1 consul members
-
-# ubuntu@ip-10-0-2-102:~$ docker exec -it consul-client1 consul members
-# Node            Address          Status  Type    Build  Protocol  DC
-# consul-server1  10.0.1.175:8301  alive   server  0.7.5  2         dc1
-# consul-client1  10.0.2.102:8301  alive   client  0.7.5  2         dc1
