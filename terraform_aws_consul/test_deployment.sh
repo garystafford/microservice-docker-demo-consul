@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Deploys a cluster of (3) Consul Servers to (3) EC2 Instances
+# Test Consul Server Cluster
 
 # set -e
 
@@ -10,4 +10,11 @@ ec2_public_ip=$(aws ec2 describe-instances \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo ${ec2_public_ip}
 
-curl ec2_public_ip:8500
+key=$(openssl rand -hex 4)
+value=$(openssl rand -hex 64)
+echo ${key}
+echo ${value}
+
+curl -X PUT -d @- ${ec2_public_ip}:8500/v1/kv/tmp/value/${key} <<< ${value}
+
+curl -s ${ec2_public_ip}:8500/v1/kv/tmp/value/${value}?raw
