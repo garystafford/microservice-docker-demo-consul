@@ -27,7 +27,11 @@ docker run -d \
   --volume consul_data:/consul/data \
   --publish 8500:8500 \
   consul:latest \
-  consul agent -server -ui -bootstrap-expect=3 -client=0.0.0.0 -advertise=${SWARM_MANAGER_IP} -data-dir="/consul/data"
+  consul agent -server -ui \
+    -bootstrap-expect=3 \
+    -client=0.0.0.0 \
+    -advertise=${SWARM_MANAGER_IP} \
+    -data-dir="/consul/data"
 
 # next two consul servers
 consul_servers=( "consul-server2" "consul-server3" )
@@ -47,7 +51,11 @@ do
     --volume consul_data:/consul/data \
     --publish 8500:8500 \
     consul:latest \
-    consul agent -server -ui -client=0.0.0.0 -advertise='{{ GetInterfaceIP "eth1" }}' -retry-join=${SWARM_MANAGER_IP} -data-dir="/consul/data"
+    consul agent -server -ui \
+      -client=0.0.0.0 \
+      -advertise='{{ GetInterfaceIP "eth1" }}' \
+      -retry-join=${SWARM_MANAGER_IP} \
+      -data-dir="/consul/data"
   let "i++"
 done
 
@@ -68,7 +76,10 @@ do
     --env "CONSUL_BIND_INTERFACE=eth1" \
     --volume consul_data:/consul/data \
     consul:latest \
-    consul agent -client=0.0.0.0 -advertise='{{ GetInterfaceIP "eth1" }}' -retry-join=${SWARM_MANAGER_IP} -data-dir="/consul/data"
+    consul agent -client=0.0.0.0 \
+      -advertise='{{ GetInterfaceIP "eth1" }}' \
+      -retry-join=${SWARM_MANAGER_IP} \
+      -data-dir="/consul/data"
   let "i++"
 done
 

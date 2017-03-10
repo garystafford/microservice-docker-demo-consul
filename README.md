@@ -6,7 +6,7 @@ _Project In Progress..._
 
 This repository has been developed for the post, '[Distributed Service Configuration with Consul, Spring Cloud, and Docker](https://programmaticponderings.com/2017/02/28/distributed-service-configuration-with-consul-spring-cloud-and-docker-2/)'. The post explore the use of HashiCorp Consul for distributed configuration of containerized Spring Boot microservices, deployed to a Docker swarm cluster.
 
-In the first half of the post, we provision a series of VMs, build a Docker swarm cluster on top of those VMs, and install Consul and Registrator on each swarm host. In the second half of the post, we configure and deploy multiple, containerized instances of a Spring Boot microservice, backed by MongoDB, to the swarm cluster, using Docker Compose version 3\. The final objective of the post is have all the deployed services registered with Consul, via Registrator, and the Spring Boot service's configuration being provided dynamically by Consul, at service startup.
+In the first half of the post, we provision a series of VMs, build a Docker swarm cluster on top of those VMs, and install Consul and Registrator on each swarm host. In the second half of the post, we configure and deploy multiple, containerized instances of a Spring Boot microservice, backed by MongoDB, to the swarm cluster, using Docker Compose version 3. The final objective of the post is have all the deployed services registered with Consul, via Registrator, and the Spring Boot service's configuration being provided dynamically by Consul, at service startup.
 
 ### Objectives
 
