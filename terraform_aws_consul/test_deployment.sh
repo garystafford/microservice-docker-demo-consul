@@ -18,7 +18,7 @@ echo "  key: ${key}"
 echo "value: ${value}"
 
 echo "Creating key/value pair..."
-curl -s -X PUT -d @- ${ec2_public_ip}:8500/v1/kv/tmp/value/${key} <<< ${value}
+curl -s -X PUT -d @- ${ec2_public_ip}:8500/v1/kv/tmp/value/${key} << ${value}
 
 echo "Reading key/value pair..."
 curl -s "${ec2_public_ip}:8500/v1/kv/tmp/value/${key}?raw" | \
