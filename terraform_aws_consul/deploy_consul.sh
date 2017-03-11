@@ -21,7 +21,7 @@ ec2_public_ip=$(aws ec2 describe-instances \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo ${ec2_public_ip}
 
-ssh -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
+ssh -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} -vvv \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
 
 ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} -vvv << 'EOSSH'
