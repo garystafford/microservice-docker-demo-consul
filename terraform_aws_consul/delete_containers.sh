@@ -13,7 +13,7 @@ ec2_public_ip=$(aws ec2 describe-instances \
 echo "consul-server-1 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "docker rm -f $(docker ps -a -q)"
+  "docker rm -f consul-server-1"
 
 ############################################################
 
@@ -26,7 +26,7 @@ ec2_public_ip=$(aws ec2 describe-instances \
   echo "consul-server-2 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "docker rm -f $(docker ps -a -q)"
+  "docker rm -f consul-server-2"
 
 ############################################################
 
@@ -39,4 +39,4 @@ ec2_public_ip=$(aws ec2 describe-instances \
   echo "consul-server-3 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "docker rm -f $(docker ps -a -q)"
+  "docker rm -f consul-server-3"
