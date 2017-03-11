@@ -13,7 +13,7 @@ export ec2_server1_private_ip=$(aws ec2 describe-instances \
 ############################################################
 
 # deploy consul-server-1
-echo "\n*** Deploying consul-server-1 ***\n"
+echo "*** Deploying consul-server-1 ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
@@ -46,7 +46,7 @@ EOSSH
 ############################################################
 
 # deploy consul-server-2
-echo "\n*** Deploying consul-server-2 ***\n"
+echo "*** Deploying consul-server-2 ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-2' \
@@ -80,7 +80,7 @@ EOSSH
 ############################################################
 
 # deploy consul-server-3
-echo "\n*** Deploying consul-server-3 ***\n"
+echo "*** Deploying consul-server-3 ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-3' \
