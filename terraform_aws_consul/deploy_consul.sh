@@ -2,8 +2,7 @@
 
 # Deploys a cluster of (3) Consul Servers to (3) EC2 Instances
 
-set -e
-
+# set -e
 
 # Used by all Consul clients
 export ec2_server1_private_ip=$(aws ec2 describe-instances \
@@ -21,12 +20,11 @@ ec2_public_ip=$(aws ec2 describe-instances \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo "consul-server-1 public ip: ${ec2_public_ip}"
 
-ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} -vvv \
+ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
 
-ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} -vvv << 'EOSSH'
+ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   export consul_server="consul-server-1"
-  docker rm -f $(docker ps -a -q)
   docker run -d \
     --net=host \
     --hostname ${consul_server} \
@@ -60,7 +58,6 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 
 ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   export consul_server="consul-server-2"
-  docker rm -f $(docker ps -a -q)
   docker run -d \
     --net=host \
     --hostname ${consul_server} \
@@ -96,7 +93,6 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 
 ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   export consul_server="consul-server-3"
-  docker rm -f $(docker ps -a -q)
   docker run -d \
     --net=host \
     --hostname ${consul_server} \
