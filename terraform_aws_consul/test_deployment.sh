@@ -12,8 +12,8 @@ ec2_public_ip=$(aws ec2 describe-instances \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo "consul-server-1 public ip: ${ec2_public_ip}"
 
-key=$(openssl rand -hex 4)
-value=$(openssl rand -hex 16)
+key=test_key
+value=test_value
 echo "  key: ${key}"
 echo "value: ${value}"
 
