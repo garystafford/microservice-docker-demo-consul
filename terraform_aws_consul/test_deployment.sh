@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Test Consul cluster is working as expected
+# Test Consul cluster by creating/reading/deleting k/v pair
 
 set -e
 
