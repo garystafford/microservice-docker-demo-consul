@@ -5,7 +5,7 @@
 # set -e
 
 # consul-server-1
-echo "\n*** Accessing consul-server-1 ***\n"
+echo "\n*** Deleting consul-server-1 container... ***\n"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
@@ -18,7 +18,7 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 ############################################################
 
 # consul-server-2
-echo "\n*** Accessing consul-server-2 ***\n"
+echo "\n*** Deleting consul-server-2 container... ***\n"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-2' \
@@ -31,7 +31,7 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 ############################################################
 
 # consul-server-3
-echo "\n*** Accessing consul-server-3 ***\n"
+echo "\n*** Deleting consul-server-3 container... ***\n"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-3' \
