@@ -24,7 +24,7 @@ echo ${ec2_public_ip}
 ssh -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
 
-ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
+ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} -vvv << 'EOSSH'
   export consul_server="consul-server-1"
   docker rm -f $(docker ps -a -q)
   docker run -d \
