@@ -9,7 +9,7 @@ set -e
 export ec2_server1_private_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
   --output text --query 'Reservations[*].Instances[*].PrivateIpAddress')
-echo ${ec2_server1_private_ip}
+  echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
 
 ############################################################
 
@@ -19,7 +19,7 @@ echo "\n*** Deploying consul-server-1 ***\n"
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
-echo ${ec2_public_ip}
+echo "consul-server-1 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} -vvv \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
@@ -53,7 +53,7 @@ echo "\n*** Deploying consul-server-2 ***\n"
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-2' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
-echo ${ec2_public_ip}
+  echo "consul-server-2 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
@@ -89,7 +89,7 @@ echo "\n*** Deploying consul-server-3 ***\n"
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-3' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
-echo ${ec2_public_ip}
+  echo "consul-server-3 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
