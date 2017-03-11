@@ -2,7 +2,7 @@
 
 # Deploys a cluster of (3) Consul Servers to (3) EC2 Instances
 
-# set -e
+set -e
 
 
 # Used by all Consul clients
@@ -14,18 +14,19 @@ echo ${ec2_server1_private_ip}
 ############################################################
 
 # deploy consul-server-1
+echo "\n*** Deploying consul-server-1 ***\n"
+
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo ${ec2_public_ip}
 
+ssh -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
+  "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
 
-# ssh -i ~/.ssh/consul_aws_rsa ubuntu@${EC2_PUBLIC_IP} -c \
-#   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
-
-ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc
-  consul_server="consul-server-1"
+ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
+  export consul_server="consul-server-1"
+  docker rm -f $(docker ps -a -q)
   docker run -d \
     --net=host \
     --hostname ${consul_server} \
@@ -40,23 +41,26 @@ ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
       -bootstrap-expect=3 -advertise=${ec2_server1_private_ip} \
       -data-dir="/consul/data"
 
-  sleep 3
-  docker exec -it consul-server-1 consul members
   docker logs consul-server-1
+  docker exec -i consul-server-1 consul members
 EOSSH
 
 ############################################################
 
 # deploy consul-server-2
+echo "\n*** Deploying consul-server-2 ***\n"
+
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-2' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo ${ec2_public_ip}
 
-ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc
-  consul_server="consul-server-2"
+ssh -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
+  "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
 
+ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
+  export consul_server="consul-server-2"
+  docker rm -f $(docker ps -a -q)
   docker run -d \
     --net=host \
     --hostname ${consul_server} \
@@ -73,22 +77,26 @@ ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
       -data-dir="/consul/data"
 
   sleep 3
-  docker exec -it consul-server-2 consul members
   docker logs consul-server-2
+  docker exec -i consul-server-2 consul members
 EOSSH
 
 ############################################################
 
 # deploy consul-server-3
+echo "\n*** Deploying consul-server-3 ***\n"
+
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-3' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo ${ec2_public_ip}
 
-ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
-  ec2_server1_private_ip=${ec2_server1_private_ip}
-  consul_server="consul-server-3"
+ssh -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
+  "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc"
 
+ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
+  export consul_server="consul-server-3"
+  docker rm -f $(docker ps -a -q)
   docker run -d \
     --net=host \
     --hostname ${consul_server} \
@@ -104,7 +112,6 @@ ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
       -retry-join=${ec2_server1_private_ip} \
       -data-dir="/consul/data"
 
-  sleep 3
-  docker exec -it consul-server-2 consul members
-  docker logs consul-server-2
+  docker logs consul-server-3
+  docker exec -i consul-server-3 consul members
 EOSSH
