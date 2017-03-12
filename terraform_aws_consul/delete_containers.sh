@@ -4,16 +4,16 @@
 
 # set -e
 
-# consul-server-1
-echo "*** Deleting consul-server-1 container... ***"
+# consul-server-3
+echo "*** Deleting consul-server-3 container... ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
-  --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
+  --filters Name='tag:Name,Values=tf-instance-consul-server-3' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
-echo "consul-server-1 public ip: ${ec2_public_ip}"
+  echo "consul-server-3 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "docker rm -f -v consul-server-1 && echo 'Container deleted...' || echo 'No container exists?'"
+  "docker rm -f -v consul-server-3 && echo 'Container deleted...' || echo 'No container exists?'"
 
 ############################################################
 
@@ -30,13 +30,13 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 
 ############################################################
 
-# consul-server-3
-echo "*** Deleting consul-server-3 container... ***"
+# consul-server-1
+echo "*** Deleting consul-server-1 container... ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
-  --filters Name='tag:Name,Values=tf-instance-consul-server-3' \
+  --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
-  echo "consul-server-3 public ip: ${ec2_public_ip}"
+echo "consul-server-1 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "docker rm -f -v consul-server-3 && echo 'Container deleted...' || echo 'No container exists?'"
+  "docker rm -f -v consul-server-1 && echo 'Container deleted...' || echo 'No container exists?'"
