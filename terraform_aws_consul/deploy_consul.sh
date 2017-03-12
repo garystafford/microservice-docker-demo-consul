@@ -25,7 +25,6 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 
 ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   export consul_server="consul-server-1"
-  sleep 3
   docker run -d \
     --net=host \
     --hostname ${consul_server} \
@@ -37,12 +36,11 @@ ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
     --publish 8500:8500 \
     consul:latest \
     consul agent -server -ui -client=0.0.0.0 \
-      -bootstrap-expect=3 -advertise=${ec2_server1_private_ip} \
+      -bootstrap-expect=3 \
+      -advertise='{{ GetInterfaceIP "eth0" }}' \
       -data-dir="/consul/data"
 
-  sleep 3
   docker logs consul-server-1
-  sleep 3
   docker exec -i consul-server-1 consul members
 EOSSH
 
