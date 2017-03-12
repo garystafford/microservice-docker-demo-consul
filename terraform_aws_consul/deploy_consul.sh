@@ -24,8 +24,8 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
 
 ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  export consul_server="consul-server-1"
-  docker run -d \
+  consul_server="consul-server-1" \
+  && docker run -d \
     --net=host \
     --hostname ${consul_server} \
     --name ${consul_server} \
@@ -59,8 +59,8 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
 
 ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  export consul_server="consul-server-2"
-  docker run -d \
+  consul_server="consul-server-2" \
+  && docker run -d \
     --net=host \
     --hostname ${consul_server} \
     --name ${consul_server} \
@@ -93,8 +93,8 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
 
 ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  export consul_server="consul-server-3"
-  docker run -d \
+  consul_server="consul-server-3" \
+  && docker run -d \
     --net=host \
     --hostname ${consul_server} \
     --name ${consul_server} \
