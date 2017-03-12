@@ -72,7 +72,7 @@ ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
     consul:latest \
     consul agent -server -ui -client=0.0.0.0 \
       -advertise='{{ GetInterfaceIP "eth0" }}' \
-      -retry-join=${ec2_server1_private_ip} \
+      -retry-join="${ec2_server1_private_ip}" \
       -data-dir="/consul/data"
 
   sleep 3
@@ -107,7 +107,7 @@ ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
     consul:latest \
     consul agent -server -ui -client=0.0.0.0 \
       -advertise='{{ GetInterfaceIP "eth0" }}' \
-      -retry-join=${ec2_server1_private_ip} \
+      -retry-join="${ec2_server1_private_ip}" \
       -data-dir="/consul/data"
 
   sleep 3
@@ -120,4 +120,4 @@ EOSSH
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
-echo "*** Consul UI: ec2_public_ip ***"
+echo "*** Consul UI: http://${ec2_public_ip}:8500/ui/ ***"
