@@ -18,13 +18,13 @@ echo "  key: ${key}"
 echo "value: ${value}"
 
 echo "Creating key/value pair..."
-curl -s -X PUT -d @- ${ec2_public_ip}:8500/v1/kv/tmp/value/${key} <<< ${value}  > /dev/null
+curl -s -X PUT -d @- "${ec2_public_ip}:8500/v1/kv/tmp/value/${key}" <<< "${value}"  > /dev/null
 
 echo "Reading key/value pair..."
 curl -s "${ec2_public_ip}:8500/v1/kv/tmp/value/${key}?raw" | \
   grep ${value} && echo "Passed!" || echo "Failed!"
 
 echo "Deleting key/value pair..."
-curl -s -X DELETE ${ec2_public_ip}:8500/v1/kv/tmp/value/${key}  > /dev/null
+curl -s -X DELETE "${ec2_public_ip}:8500/v1/kv/tmp/value/${key}"  > /dev/null
 
 echo "Test complete."
