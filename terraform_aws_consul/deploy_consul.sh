@@ -23,7 +23,7 @@ echo "consul-server-1 public ip: ${ec2_public_ip}"
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
 
-ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
+ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   consul_server="consul-server-1" \
   && docker run -d \
     --net=host \
@@ -58,7 +58,7 @@ ec2_public_ip=$(aws ec2 describe-instances \
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
 
-ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
+ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   consul_server="consul-server-2" \
   && docker run -d \
     --net=host \
@@ -74,6 +74,7 @@ ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
       -advertise='{{ GetInterfaceIP "eth0" }}' \
       -retry-join=${ec2_server1_private_ip} \
       -data-dir="/consul/data"
+
   sleep 3
   docker logs consul-server-2
   docker exec -i consul-server-2 consul members
@@ -92,7 +93,7 @@ ec2_public_ip=$(aws ec2 describe-instances \
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
   "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
 
-ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
+ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   consul_server="consul-server-3" \
   && docker run -d \
     --net=host \
