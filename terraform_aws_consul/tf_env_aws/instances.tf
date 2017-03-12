@@ -1,10 +1,10 @@
 # server1
 resource "aws_instance" "consul_server_1" {
-  /*connection {
+  connection {
     user        = "ubuntu"
     private_key = "${file("~/.ssh/consul_aws_rsa")}"
     timeout     = "${connection_timeout}"
-  }*/
+  }
 
   ami               = "${lookup(var.aws_amis_base, var.aws_region)}"
   instance_type     = "t2.nano"
@@ -25,11 +25,11 @@ resource "aws_instance" "consul_server_1" {
 
 # server2
 resource "aws_instance" "consul_server_2" {
-  /*connection {
+  connection {
     user        = "ubuntu"
     private_key = "${file("~/.ssh/consul_aws_rsa")}"
     timeout     = "${connection_timeout}"
-  }*/
+  }
 
   ami               = "${lookup(var.aws_amis_base, var.aws_region)}"
   instance_type     = "t2.nano"
@@ -51,11 +51,11 @@ resource "aws_instance" "consul_server_2" {
 
 # server3
 resource "aws_instance" "consul_server_3" {
-  /*connection {
+  connection {
     user        = "ubuntu"
     private_key = "${file("~/.ssh/consul_aws_rsa")}"
     timeout     = "${connection_timeout}"
-  }*/
+  }
 
   ami               = "${lookup(var.aws_amis_base, var.aws_region)}"
   instance_type     = "t2.nano"
