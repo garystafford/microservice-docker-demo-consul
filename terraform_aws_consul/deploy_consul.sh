@@ -40,6 +40,7 @@ ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
       -advertise='{{ GetInterfaceIP "eth0" }}' \
       -data-dir="/consul/data"
 
+  sleep 3
   docker logs consul-server-1
   docker exec -i consul-server-1 consul members
 EOSSH
@@ -73,7 +74,7 @@ ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
       -advertise='{{ GetInterfaceIP "eth0" }}' \
       -retry-join=${ec2_server1_private_ip} \
       -data-dir="/consul/data"
-
+  sleep 3
   docker logs consul-server-2
   docker exec -i consul-server-2 consul members
 EOSSH
@@ -108,6 +109,7 @@ ssh -T -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
       -retry-join=${ec2_server1_private_ip} \
       -data-dir="/consul/data"
 
+  sleep 3
   docker logs consul-server-3
   docker exec -i consul-server-3 consul members
 EOSSH
