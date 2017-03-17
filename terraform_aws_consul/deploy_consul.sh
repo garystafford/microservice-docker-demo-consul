@@ -25,10 +25,10 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 
 ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
 
-echo ${ec2_server1_private_ip}
-if [ -z "${ec2_server1_private_ip}" ]; then
-   exit 1
-fi
+echo "${ec2_server1_private_ip}"
+# if [ -z "${ec2_server1_private_ip}" ]; then
+#    exit 1
+# fi
 
   consul_server="consul-server-1" \
   && docker run -d \
