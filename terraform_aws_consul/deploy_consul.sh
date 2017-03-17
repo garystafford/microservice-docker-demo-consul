@@ -20,18 +20,16 @@ ec2_public_ip=$(aws ec2 describe-instances \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo "consul-server-1 public ip: ${ec2_public_ip}"
 
-ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "sed -i.bak '/ec2_server1_private_ip/d' ~/.bashrc \
-    && echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
+consul_server="consul-server-1"
 
-ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  env
+ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
   echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
-  consul_server="consul-server-1" \
-  && docker run -d \
+  echo "consul_server: ${consul_server}"
+
+  docker run -d \
     --net=host \
-    --hostname "${consul_server}" \
-    --name "${consul_server}" \
+    --hostname ${consul_server} \
+    --name ${consul_server} \
     --env "SERVICE_IGNORE=true" \
     --env "CONSUL_CLIENT_INTERFACE=eth0" \
     --env "CONSUL_BIND_INTERFACE=eth0" \
@@ -43,13 +41,12 @@ ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
       -advertise='{{ GetInterfaceIP "eth0" }}' \
       -data-dir="/consul/data"
 
-  docker ps -a
   sleep 3
   docker logs consul-server-1
   docker exec -i consul-server-1 consul members
 EOSSH
 
-sleep 10
+sleep 5
 ############################################################
 
 # deploy consul-server-2
@@ -62,13 +59,13 @@ ec2_public_ip=$(aws ec2 describe-instances \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
   echo "consul-server-2 public ip: ${ec2_public_ip}"
 
-ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "sed -i.bak '/ec2_server1_private_ip/d' ~/.bashrc \
-    && echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
+consul_server="consul-server-2"
 
-ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  consul_server="consul-server-2" \
-  && docker run -d \
+ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
+  echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
+  echo "consul_server: ${consul_server}"
+
+  docker run -d \
     --net=host \
     --hostname ${consul_server} \
     --name ${consul_server} \
@@ -100,13 +97,13 @@ ec2_public_ip=$(aws ec2 describe-instances \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
   echo "consul-server-3 public ip: ${ec2_public_ip}"
 
-ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "sed -i.bak '/ec2_server1_private_ip/d' ~/.bashrc \
-    && echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
+consul_server="consul-server-3"
 
-ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  consul_server="consul-server-3" \
-  && docker run -d \
+ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
+  echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
+  echo "consul_server: ${consul_server}"
+
+  docker run -d \
     --net=host \
     --hostname ${consul_server} \
     --name ${consul_server} \
