@@ -6,7 +6,7 @@ set -e
 
 echo "Destroying AWS infrastructure..."
 
-cd ${JENKINS_HOME}/terraform_aws_consul/tf_env_aws/
+cd tf_env_aws/
 
 terraform remote config \
   -backend=s3 \
