@@ -21,10 +21,10 @@ ec2_public_ip=$(aws ec2 describe-instances \
 echo "consul-server-1 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-  "echo export ec2_server1_private_ip=${ec2_server1_private_ip} >> ~/.bashrc && exec bash"
+  sed -i.bak '/ec2_server1_private_ip/d' ~/.bashrc \
+    && echo export ec2_server1_private_ip="${ec2_server1_private_ip}" >> ~/.bashrc
 
 ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
-  whoami
   env
   cat ~/.bashrc
   export consul_server="consul-server-1"
