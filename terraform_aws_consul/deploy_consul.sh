@@ -25,7 +25,7 @@ echo "consul-server-1 public ip: ${ec2_public_ip}"
 
 ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   export ec2_server1_private_ip="${ec2_server1_private_ip}"
-  export consul_server="consul-server-1" \
+  export consul_server="consul-server-1"
   env
   docker run -d \
     --net=host \
