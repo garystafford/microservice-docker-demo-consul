@@ -13,7 +13,8 @@ echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
 ############################################################
 
 # deploy consul-server-1
-echo "\n*** Deploying consul-server-1 ***"
+echo ""
+echo "*** Deploying consul-server-1 ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
@@ -50,7 +51,8 @@ sleep 5
 ############################################################
 
 # deploy consul-server-2
-echo "\n*** Deploying consul-server-2 ***"
+echo ""
+echo "*** Deploying consul-server-2 ***"
 
 echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
 
@@ -88,7 +90,8 @@ EOSSH
 ############################################################
 
 # deploy consul-server-3
-echo "\n*** Deploying consul-server-3 ***"
+echo ""
+echo "*** Deploying consul-server-3 ***"
 
 echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
 
@@ -126,4 +129,5 @@ EOSSH
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-1' \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
-echo "\n*** Consul UI: http://${ec2_public_ip}:8500/ui/ ***"
+echo ""
+echo "*** Consul UI: http://${ec2_public_ip}:8500/ui/ ***"
