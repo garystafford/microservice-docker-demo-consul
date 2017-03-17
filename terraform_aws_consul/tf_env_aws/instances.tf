@@ -1,11 +1,5 @@
-# server1
+# server-1
 resource "aws_instance" "consul_server_1" {
-  /*connection {
-    user        = "ubuntu"
-    private_key = "${file("~/.ssh/consul_aws_rsa")}"
-    timeout     = "${connection_timeout}"
-  }*/
-
   ami               = "${lookup(var.aws_amis_base, var.aws_region)}"
   instance_type     = "t2.nano"
   availability_zone = "us-east-1a"
@@ -23,14 +17,8 @@ resource "aws_instance" "consul_server_1" {
   }
 }
 
-# server2
+# server-2
 resource "aws_instance" "consul_server_2" {
-  /*connection {
-    user        = "ubuntu"
-    private_key = "${file("~/.ssh/consul_aws_rsa")}"
-    timeout     = "${connection_timeout}"
-  }*/
-
   ami               = "${lookup(var.aws_amis_base, var.aws_region)}"
   instance_type     = "t2.nano"
   availability_zone = "us-east-1b"
@@ -48,15 +36,8 @@ resource "aws_instance" "consul_server_2" {
   }
 }
 
-
-# server3
+# server-3
 resource "aws_instance" "consul_server_3" {
-  /*connection {
-    user        = "ubuntu"
-    private_key = "${file("~/.ssh/consul_aws_rsa")}"
-    timeout     = "${connection_timeout}"
-  }*/
-
   ami               = "${lookup(var.aws_amis_base, var.aws_region)}"
   instance_type     = "t2.nano"
   availability_zone = "us-east-1c"

@@ -42,13 +42,6 @@ variable "aws_amis_base" {
   }
 }
 
-/*variable "aws_amis_nat" {
-  description = "Default AMIs by region for NAT instances"
-  default = {
-    us-east-1 = "ami-863b6391"
-  }
-}*/
-
 variable "owner" {
   description = "Infrastructure Owner"
   default = "Gary Stafford"
