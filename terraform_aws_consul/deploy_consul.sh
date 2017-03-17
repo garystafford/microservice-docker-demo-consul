@@ -30,8 +30,8 @@ ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
 
   docker run -d \
     --net=host \
-    --hostname ${consul_server} \
-    --name ${consul_server} \
+    --hostname "${consul_server}" \
+    --name "${consul_server}" \
     --env "SERVICE_IGNORE=true" \
     --env "CONSUL_CLIENT_INTERFACE=eth0" \
     --env "CONSUL_BIND_INTERFACE=eth0" \
