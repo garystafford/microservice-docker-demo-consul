@@ -25,8 +25,8 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 
 ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
 
-echo ${ec2_public_ip}
-if [ -z "${ec2_public_ip}" ]; then
+echo ${ec2_server1_private_ip}
+if [ -z "${ec2_server1_private_ip}" ]; then
    exit 1
 fi
 
@@ -57,8 +57,8 @@ sleep 10
 # deploy consul-server-2
 echo "*** Deploying consul-server-2 ***"
 
-echo ${ec2_public_ip}
-if [ -z "${ec2_public_ip}" ]; then
+echo ${ec2_server1_private_ip}
+if [ -z "${ec2_server1_private_ip}" ]; then
    exit 1
 fi
 
@@ -97,8 +97,8 @@ EOSSH
 # deploy consul-server-3
 echo "*** Deploying consul-server-3 ***"
 
-echo ${ec2_public_ip}
-if [ -z "${ec2_public_ip}" ]; then
+echo ${ec2_server1_private_ip}
+if [ -z "${ec2_server1_private_ip}" ]; then
    exit 1
 fi
 
