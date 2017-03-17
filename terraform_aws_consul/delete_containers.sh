@@ -5,6 +5,7 @@
 # set -e
 
 # consul-server-3
+echo " "
 echo "*** Deleting consul-server-3 container... ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
@@ -18,6 +19,7 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 ############################################################
 
 # consul-server-2
+echo " "
 echo "*** Deleting consul-server-2 container... ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
@@ -31,6 +33,7 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 ############################################################
 
 # consul-server-1
+echo " "
 echo "*** Deleting consul-server-1 container... ***"
 
 ec2_public_ip=$(aws ec2 describe-instances \
