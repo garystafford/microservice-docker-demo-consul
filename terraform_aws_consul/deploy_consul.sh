@@ -44,8 +44,8 @@ ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
       -data-dir="/consul/data"
 
   sleep 3
-  docker logs ${consul_server}
-  docker exec -i ${consul_server} consul members
+  docker logs consul-server-1
+  docker exec -i consul-server-1 consul members
 EOSSH
 
 sleep 10
