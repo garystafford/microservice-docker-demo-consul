@@ -23,7 +23,7 @@ echo "consul-server-1 public ip: ${ec2_public_ip}"
 # ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
 #   'echo export ec2_server1_private_ip="${ec2_server1_private_ip}" >> ~/.bashrc'
 
-ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
+ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
   export ec2_server1_private_ip="${ec2_server1_private_ip}"
   export consul_server="consul-server-1"
   env
@@ -43,8 +43,8 @@ ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
       -data-dir="/consul/data"
 
   sleep 3
-  docker logs consul-server-1
-  docker exec -i consul-server-1 consul members
+  docker logs ${consul_server}
+  docker exec -i ${consul_server} consul members
 EOSSH
 
 sleep 10
