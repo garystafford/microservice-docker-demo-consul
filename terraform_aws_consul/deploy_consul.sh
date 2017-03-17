@@ -23,7 +23,7 @@ echo "consul-server-1 public ip: ${ec2_public_ip}"
 # ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
 #   'echo export ec2_server1_private_ip="${ec2_server1_private_ip}" >> ~/.bashrc'
 
-ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
+ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
   export ec2_server1_private_ip="${ec2_server1_private_ip}"
   export consul_server="consul-server-1"
   env
