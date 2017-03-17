@@ -45,6 +45,7 @@ ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   docker exec -i consul-server-1 consul members
 EOSSH
 
+sleep 10
 ############################################################
 
 # deploy consul-server-2
