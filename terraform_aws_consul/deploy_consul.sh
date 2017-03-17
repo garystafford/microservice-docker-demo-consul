@@ -25,10 +25,7 @@ ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} 
 
 ssh -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
 
-echo "${ec2_server1_private_ip}"
-# if [ -z "${ec2_server1_private_ip}" ]; then
-#    exit 1
-# fi
+echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
 
   consul_server="consul-server-1" \
   && docker run -d \
@@ -57,10 +54,7 @@ sleep 10
 # deploy consul-server-2
 echo "*** Deploying consul-server-2 ***"
 
-echo ${ec2_server1_private_ip}
-if [ -z "${ec2_server1_private_ip}" ]; then
-   exit 1
-fi
+echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-2' \
@@ -97,10 +91,7 @@ EOSSH
 # deploy consul-server-3
 echo "*** Deploying consul-server-3 ***"
 
-echo ${ec2_server1_private_ip}
-if [ -z "${ec2_server1_private_ip}" ]; then
-   exit 1
-fi
+echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
 
 ec2_public_ip=$(aws ec2 describe-instances \
   --filters Name='tag:Name,Values=tf-instance-consul-server-3' \
