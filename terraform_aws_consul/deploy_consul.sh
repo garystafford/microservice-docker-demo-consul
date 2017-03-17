@@ -20,11 +20,10 @@ ec2_public_ip=$(aws ec2 describe-instances \
   --output text --query 'Reservations[*].Instances[*].PublicIpAddress')
 echo "consul-server-1 public ip: ${ec2_public_ip}"
 
-# ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
-#   'echo export ec2_server1_private_ip="${ec2_server1_private_ip}" >> ~/.bashrc'
+ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
+  'echo export ec2_server1_private_ip="${ec2_server1_private_ip}" >> ~/.bashrc'
 
-ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << EOSSH
-  export ec2_server1_private_ip="${ec2_server1_private_ip}"
+ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   export consul_server="consul-server-1"
   echo "consul_server: ${consul_server}"
   docker run -d \
