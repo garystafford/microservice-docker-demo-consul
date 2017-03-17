@@ -37,12 +37,11 @@ ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_i
       -advertise='{{ GetInterfaceIP "eth0" }}' \
       -data-dir="/consul/data"
 
-  sleep 3
+  sleep 5
   docker logs consul-server-1
   docker exec -i consul-server-1 consul members
 EOSSH
 
-sleep 5
 ############################################################
 
 # deploy consul-server-2
