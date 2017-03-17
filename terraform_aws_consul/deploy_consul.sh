@@ -22,11 +22,10 @@ echo "consul-server-1 public ip: ${ec2_public_ip}"
 
 ssh -oStrictHostKeyChecking=no -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} \
   sed -i.bak '/ec2_server1_private_ip/d' ~/.bashrc \
-    && echo export ec2_server1_private_ip="${ec2_server1_private_ip}" >> ~/.bashrc
+    && echo export ec2_server1_private_ip="${ec2_server1_private_ip}" >> ~/.bashrc && exec bash
 
 ssh -oStrictHostKeyChecking=no -T -i ~/.ssh/consul_aws_rsa ubuntu@${ec2_public_ip} << 'EOSSH'
   env
-  cat ~/.bashrc
   export consul_server="consul-server-1"
   echo "consul_server: ${consul_server}"
   echo "consul-server-1 private ip: ${ec2_server1_private_ip}"
