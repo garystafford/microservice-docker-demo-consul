@@ -15,7 +15,7 @@ do
     --virtualbox-memory "512" \
     --virtualbox-cpu-count "1" \
     --virtualbox-disk-size "5000" \
-    --engine-label purpose=backend \
+    --engine-label purpose=consul \
     ${vm}
 done
 
@@ -27,11 +27,11 @@ do
     --virtualbox-memory "1024" \
     --virtualbox-cpu-count "1" \
     --virtualbox-disk-size "20000" \
-    --engine-label purpose=services \
+    --engine-label purpose=applications \
     ${vm}
 done
 
-# larger for elk
+# larger for ELK Stack
 for vm in ${vms[@]:5:1}
 do
   docker-machine create \
@@ -43,7 +43,7 @@ do
     ${vm}
 done
 
-# fix potential vm.max if ELK is installed on worker3
+# fix vm.max when ELK Stack is installed on worker3
 docker-machine ssh worker3 sudo sysctl -w vm.max_map_count=262144
 docker-machine ssh worker3 sudo sysctl -n vm.max_map_count
 
