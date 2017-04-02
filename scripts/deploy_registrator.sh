@@ -16,7 +16,7 @@ do
   HOST_IP=$(docker-machine ip ${vm})
   # echo ${HOST_IP}
 
-  docker run -d \
+  docker service create \
     --name=registrator \
     --net=host \
     --volume=/var/run/docker.sock:/tmp/docker.sock \
