@@ -26,7 +26,6 @@ do
 done
 
 docker node rm manager1
-
 docker node ls
 
 echo "Script completed..."
