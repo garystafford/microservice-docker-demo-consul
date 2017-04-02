@@ -11,7 +11,7 @@ eval $(docker-machine env manager1)
 docker service create \
   --name swarm-visualizer \
   --publish 5001:8080/tcp \
-  --constraint node.hostname = manager1 \
+  --constraint "node.hostname == manager1" \
   --mode global \
   --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
   --env "SERVICE_IGNORE=true" \

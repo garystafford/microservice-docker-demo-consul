@@ -43,6 +43,10 @@ do
     ${vm}
 done
 
+# fix potential vm.max if ELK is installed on worker3
+docker-machine ssh worker3 sudo sysctl -w vm.max_map_count=262144
+docker-machine ssh worker3 sudo sysctl -n vm.max_map_count
+
 docker-machine ls
 
 echo "Script completed..."
