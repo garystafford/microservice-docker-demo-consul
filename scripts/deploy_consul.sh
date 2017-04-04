@@ -21,6 +21,7 @@ docker run -d \
   --net=host \
   --hostname ${consul_server} \
   --name ${consul_server} \
+  --restart=on-failure:3 \
   --env "SERVICE_IGNORE=true" \
   --env "CONSUL_CLIENT_INTERFACE=eth0" \
   --env "CONSUL_BIND_INTERFACE=eth1" \
@@ -45,6 +46,7 @@ do
     --net=host \
     --hostname ${consul_servers[i]} \
     --name ${consul_servers[i]} \
+    --restart=on-failure:3 \
     --env "SERVICE_IGNORE=true" \
     --env "CONSUL_CLIENT_INTERFACE=eth0" \
     --env "CONSUL_BIND_INTERFACE=eth1" \
@@ -71,6 +73,7 @@ do
     --net=host \
     --hostname ${consul_clients[i]} \
     --name ${consul_clients[i]} \
+    --restart=on-failure:3 \
     --env "SERVICE_IGNORE=true" \
     --env "CONSUL_CLIENT_INTERFACE=eth0" \
     --env "CONSUL_BIND_INTERFACE=eth1" \

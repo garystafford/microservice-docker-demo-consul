@@ -25,10 +25,12 @@ In the first half of the post, we provision a series of VMs, build a Docker swar
 - Docker Machine
 - Docker swarm mode
 - Docker Swarm Visualizer (Mano Marks)
+- ELK Stack
+- FluentD
 - Glider Labs Registrator
 - Gradle
 - HashiCorp Consul
-- Java
+- Java 8
 - MongoDB
 - Oracle VirtualBox VM Manager
 - Spring Boot
@@ -41,7 +43,7 @@ To clone the GitHub project:
 
 ```bash
 # clone the directory
-git clone --depth 1 --branch swarm-mode \
+git clone --depth 1 --branch fluentd \
   https://github.com/garystafford/microservice-docker-demo-consul.git
 cd microservice-docker-demo-consul
 ```
@@ -52,15 +54,16 @@ cd microservice-docker-demo-consul
 
 1. create_vms.sh
 2. create_swarm.sh
-3. deploy_visualizer.sh
-4. deploy_consul.sh
-5. deploy_registrator.sh
+3. deploy_consul.sh
+4. create_net_and_vols.sh
+5. deploy_stack.sh
 
 #### Utility Scripts
 
-1. remove_unused_images.sh
+1. cleanup_unsed_components.sh
 
 #### Teardown Project
 
 1. cleanup_swarm.sh
-2. leave_swarm.sh
+2. remove_swarm.sh
+3. delete_vms.sh

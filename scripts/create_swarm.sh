@@ -4,10 +4,9 @@
 
 set -e
 
-vms=( "manager1" "manager2" "manager3"
-      "worker1" "worker2" "worker3" )
+vms=( "manager1" "manager2" "manager3" "worker1" "worker2" "worker3" )
 
-SWARM_MANAGER_IP=$(docker-machine ip manager1)
+SWARM_MANAGER_IP=$(docker-machine ip ${vms[@]:0:1})
 echo ${SWARM_MANAGER_IP}
 
 docker-machine ssh manager1 \
@@ -17,7 +16,7 @@ docker-machine ssh manager1 \
 docker-machine env manager1
 eval $(docker-machine env manager1)
 
-MANAGER_SWARM_JOIN=$(docker-machine ssh ${vms[0]} "docker swarm join-token manager")
+MANAGER_SWARM_JOIN=$(docker-machine ssh ${vms[@]:0:1} "docker swarm join-token manager")
 MANAGER_SWARM_JOIN=$(echo ${MANAGER_SWARM_JOIN} | grep -E "(docker).*(2377)" -o)
 MANAGER_SWARM_JOIN=$(echo ${MANAGER_SWARM_JOIN//\\/''})
 echo ${MANAGER_SWARM_JOIN}
@@ -28,7 +27,7 @@ do
   docker-machine ssh ${vm} ${MANAGER_SWARM_JOIN}
 done
 
-WORKER_SWARM_JOIN=$(docker-machine ssh manager1 "docker swarm join-token worker")
+WORKER_SWARM_JOIN=$(docker-machine ssh ${vms[@]:0:1} "docker swarm join-token worker")
 WORKER_SWARM_JOIN=$(echo ${WORKER_SWARM_JOIN} | grep -E "(docker).*(2377)" -o)
 WORKER_SWARM_JOIN=$(echo ${WORKER_SWARM_JOIN//\\/''})
 echo ${WORKER_SWARM_JOIN}
