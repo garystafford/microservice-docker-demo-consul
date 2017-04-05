@@ -1,23 +1,24 @@
 version: '3.0'
 
 services:
-  registrator:
-    image: gliderlabs/registrator:latest
-    command: ['-internal', "consul://${CONSUL_SERVER}:8500"]
-    hostname: registrator
-    networks:
-    - widget_overlay_net
-    volumes:
-    - /var/run/docker.sock:/tmp/docker.sock
-    deploy:
-      mode: global
-      placement:
-        constraints:
-        - node.role == worker
-    environment:
-      SERVICE_IGNORE: 'true'
-      SERVICE_NAME: registrator
-      SERVICE_TAGS: monitoring
+  # registrator:
+  #   image: gliderlabs/registrator:latest
+  #   command: ['-internal', "consul://${CONSUL_SERVER}:8500"]
+  #   hostname: registrator
+  #   networks:
+  #   - widget_overlay_net
+  #   volumes:
+  #   - /var/run/docker.sock:/tmp/docker.sock
+  #   deploy:
+  #     mode: global
+  #     placement:
+  #       constraints:
+  #       - node.role == worker
+  #   environment:
+  #     SERVICE_IGNORE: 'true'
+  #     SERVICE_NAME: registrator
+  #     SERVICE_TAGS: monitoring
+
   swarm-visualizer:
     image: manomarks/visualizer:latest
     hostname: visualizer
