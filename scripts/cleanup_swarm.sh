@@ -25,9 +25,9 @@ do
   docker-machine env ${vm}
   eval $(docker-machine env ${vm})
 
-  docker system prune -f --all
-  # docker network prune -f
-  # docker volume prune -f
+  docker system prune -f #--all
+  docker network prune -f
+  docker volume prune -f
 
   docker stop $(docker ps -a -q) || echo "Containers already stopped"
   docker rm -f $(docker ps -a -q) || echo "Containers already removed"

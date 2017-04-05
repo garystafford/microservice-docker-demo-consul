@@ -10,8 +10,10 @@ eval $(docker-machine env manager1)
 # create overlay network for stack
 docker network create \
   --driver overlay \
-  --subnet 10.0.9.0/24 \
+  --subnet=10.0.0.0/16 \
+  --ip-range=10.0.11.0/24 \
   --opt encrypted \
+  --attachable=true \
   widget_overlay_net \
 || echo "Already created?"
 

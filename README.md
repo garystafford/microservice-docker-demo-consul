@@ -54,9 +54,10 @@ cd microservice-docker-demo-consul
 
 1. create_vms.sh
 2. create_swarm.sh
-3. deploy_consul.sh
-4. create_net_and_vols.sh
-5. deploy_stack.sh
+3. create_net_and_vols.sh
+4. deploy_consul.sh
+5. deploy_registrator.sh
+6. deploy_stack.sh
 
 #### Utility Scripts
 
