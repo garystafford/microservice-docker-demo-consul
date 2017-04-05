@@ -21,6 +21,7 @@ docker run -d \
   --hostname ${consul_server} \
   --name ${consul_server} \
   --restart=on-failure:3 \
+  --env 'CONSUL_ALLOW_PRIVILEGED_PORTS=' \
   --env "SERVICE_IGNORE=true" \
   --env "CONSUL_CLIENT_INTERFACE=eth0" \
   --env "CONSUL_BIND_INTERFACE=eth1" \
@@ -28,6 +29,7 @@ docker run -d \
   --publish 8500:8500 \
   consul:latest \
   consul agent -server -ui \
+    -dns-port=53 \
     -bootstrap-expect=3 \
     -client=0.0.0.0 \
     -advertise=${SWARM_MANAGER_IP} \
@@ -46,6 +48,7 @@ do
     --hostname ${consul_servers[i]} \
     --name ${consul_servers[i]} \
     --restart=on-failure:3 \
+    --env 'CONSUL_ALLOW_PRIVILEGED_PORTS=' \
     --env "SERVICE_IGNORE=true" \
     --env "CONSUL_CLIENT_INTERFACE=eth0" \
     --env "CONSUL_BIND_INTERFACE=eth1" \
@@ -53,6 +56,7 @@ do
     --publish 8500:8500 \
     consul:latest \
     consul agent -server -ui \
+      -dns-port=53 \
       -client=0.0.0.0 \
       -advertise='{{ GetInterfaceIP "eth1" }}' \
       -retry-join=${SWARM_MANAGER_IP} \
@@ -73,12 +77,14 @@ do
     --hostname ${consul_clients[i]} \
     --name ${consul_clients[i]} \
     --restart=on-failure:3 \
+    --env 'CONSUL_ALLOW_PRIVILEGED_PORTS=' \
     --env "SERVICE_IGNORE=true" \
     --env "CONSUL_CLIENT_INTERFACE=eth0" \
     --env "CONSUL_BIND_INTERFACE=eth1" \
     --volume consul_data:/consul/data \
     consul:latest \
     consul agent -client=0.0.0.0 \
+      -dns-port=53 \
       -advertise='{{ GetInterfaceIP "eth1" }}' \
       -retry-join=${SWARM_MANAGER_IP} \
       -data-dir="/consul/data"

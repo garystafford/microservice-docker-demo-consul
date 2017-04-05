@@ -39,6 +39,7 @@ dig @192.168.99.104 -p 8600 consul.service.consul
 dig @192.168.99.104 -p 8600 mongodb.service.consul
 dig +short @192.168.99.104 -p 8600 candidate-service.service.consul
 dig +short @192.168.99.104 -p 8600 candidate-service.service.consul SRV
+dig +short @192.168.99.104 -p 8600 widget.service.consul ANY
 
 curl -s http://192.168.99.104:8500/v1/catalog/service/consul | jq .
 curl -s http://192.168.99.104:8500/v1/catalog/service/consul?pretty
