@@ -2,20 +2,21 @@
 
 # Checks if ELK is up (last container in stack to start)
 
-attempts=16
-sleeptime=15
+HOST_IP=$(docker-machine ip worker3)
+ATTEMPTS=16
+SLEEPTIME=15
 
 until curl -s --head "${HOST_IP}:9200";
 do
-  echo "Attempt ${attempts}..."
+  echo "Attempt ${ATTEMPTS}..."
 
-  if [ $attempts -eq 0 ]
+  if [ $ATTEMPTS -eq 0 ]
   then
     break
   fi
 
-  echo "Waiting ${sleeptime} more seconds to see if things are working..."
+  echo "Waiting ${SLEEPTIME} more seconds to see if things are working..."
 
-  sleep $sleeptime
-  let attempts-=1
+  sleep $SLEEPTIME
+  let ATTEMPTS-=1
 done
