@@ -57,7 +57,7 @@ cd microservice-docker-demo-consul
 2. swarm_create.sh
 3. ntwk_vols_create.sh
 4. consul_deploy.sh
-5. registrator_ deploy.sh
+5. registrator_deploy.sh
 6. stack_deploy.sh
 
 #### Utility Scripts
