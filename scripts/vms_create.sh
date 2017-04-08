@@ -4,7 +4,8 @@
 
 set -e
 
-vms=( "manager1" "manager2" "manager3" "worker1" "worker2" "worker3" )
+vms=( "manager1" "manager2" "manager3"
+      "worker1" "worker2" "worker3" )
 
 # minimally sized for managers
 for vm in ${vms[@]:0:3}

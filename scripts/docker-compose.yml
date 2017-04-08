@@ -31,7 +31,7 @@ services:
     deploy:
       placement:
         constraints:
-        - node.hostname == manager1
+        - node.role == manager
       replicas: 1
     environment:
       # SERVICE_IGNORE: 'true'

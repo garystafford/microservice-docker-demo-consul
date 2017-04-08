@@ -13,9 +13,10 @@ In the first half of the post, we provision a series of VMs, build a Docker swar
 1. Provision a series of virtual machine hosts, using Docker Machine and Oracle VirtualBox
 2. Provide distributed and highly available cluster management and service orchestration, using Docker swarm mode
 3. Provide distributed and highly available service discovery, health checking, and a hierarchical key/value store, using HashiCorp Consul
-4. Provide service registration of containerized services, using Registrator, Glider Labs' service registry bridge for Docker
-5. Provide distributed configuration for containerized Spring Boot microservices using Consul and Pivotal's Spring Cloud Consul Config
-6. Deploy multiple instances of a Spring Boot microservice, backed by MongoDB, to the swarm cluster, using Docker Compose version 3.
+4. Provide automatic service registration of containerized services using Registrator, Glider Labs' service registry bridge for Docker
+5. Provide distributed configuration for containerized services using Consul and Pivotal's Spring Cloud Consul Config
+6. Provide centralized logging for containerized services using FluentD and ELK.
+7. Deploy multiple instances of a containerized Spring Boot microservice, backed by MongoDB, to the swarm cluster, using Docker Compose version 3.
 
 ### Technologies
 
@@ -52,19 +53,19 @@ cd microservice-docker-demo-consul
 
 #### Stand-Up Project
 
-1. create_vms.sh
-2. create_swarm.sh
-3. create_net_and_vols.sh
-4. deploy_consul.sh
-5. deploy_registrator.sh
-6. deploy_stack.sh
+1. vms_create.sh
+2. swarm_create.sh
+3. ntwk_vols_create.sh
+4. consul_deploy.sh
+5. registrator_ deploy.sh
+6. stack_deploy.sh
 
 #### Utility Scripts
 
-1. cleanup_unsed_components.sh
+1. swarm_remove_contents.sh
 
 #### Teardown Project
 
-1. cleanup_swarm.sh
-2. remove_swarm.sh
-3. delete_vms.sh
+1. swarm_remove_contents.sh
+2. swarm_remove.sh
+3. vms_ delete.sh

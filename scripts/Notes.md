@@ -17,6 +17,11 @@ eval $(docker-machine env worker2)
 docker exec -it  $(docker ps | grep fluent | awk '{print $NF}') cat /fluentd/log/docker.log && date -u
 docker logs  $(docker ps | grep fluent | awk '{print $NF}') --follow
 docker container inspect  $(docker ps | grep fluent | awk '{print $NF}')
+
+HOST_IP=$(docker-machine ip manager1)
+echo ${HOST_IP}
+dig +short @${HOST_IP} widget.service.consul ANY
+
 ```
 
 ## References

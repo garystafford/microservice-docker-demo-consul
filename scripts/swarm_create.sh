@@ -4,7 +4,8 @@
 
 set -e
 
-vms=( "manager1" "manager2" "manager3" "worker1" "worker2" "worker3" )
+vms=( "manager1" "manager2" "manager3"
+      "worker1" "worker2" "worker3" )
 
 SWARM_MANAGER_IP=$(docker-machine ip ${vms[@]:0:1})
 echo ${SWARM_MANAGER_IP}
