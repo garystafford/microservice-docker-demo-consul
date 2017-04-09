@@ -19,7 +19,7 @@ services:
   #     SERVICE_NAME: registrator
   #     SERVICE_TAGS: monitoring
 
-  swarm-visualizer:
+  visualizer:
     image: manomarks/visualizer:latest
     hostname: visualizer
     ports:
