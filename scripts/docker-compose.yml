@@ -29,10 +29,10 @@ services:
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     deploy:
+      mode: global
       placement:
         constraints:
         - node.role == manager
-      replicas: 1
     environment:
       # SERVICE_IGNORE: 'true'
       SERVICE_NAME: visualizer
