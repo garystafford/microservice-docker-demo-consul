@@ -75,6 +75,7 @@ services:
       placement:
         constraints:
         - node.role == worker
+        - node.hostname != worker3
     environment:
       # SERVICE_IGNORE: 'true'
       SERVICE_NAME: fluentd
