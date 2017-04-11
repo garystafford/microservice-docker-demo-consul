@@ -46,26 +46,33 @@ To clone the GitHub project:
 # clone the directory
 git clone --depth 1 --branch fluentd \
   https://github.com/garystafford/microservice-docker-demo-consul.git
-cd microservice-docker-demo-consul
 ```
 
 ### Project Scripts
 
 #### Stand-Up Project
 
-1. vms_create.sh
-2. swarm_create.sh
-3. ntwk_vols_create.sh
-4. consul_deploy.sh
-5. registrator_deploy.sh
-6. stack_deploy.sh
+```bash
+cd microservice-docker-demo-consul/scripts/
+
+sh ./vms_create.sh # creates vms using Docker Machine
+sh ./swarm_create.sh # creates the swarm
+sh ./ntwk_vols_create.sh # creates overlay network and volumes
+sh ./consul_deploy.sh # deploys consul to all nodes
+sh ./registrator_deploy.sh # deploys registrator
+sh ./stack_deploy.sh # deploys fluentd, visualizer, elastic stack
+sh ./validate_stack.sh # waits/tests for all containers to start
+```
 
 #### Utility Scripts
 
-1. swarm_remove_contents.sh
-
+```bash
+sh ./swarm_remove_contents.sh # prune docker system components
+```
 #### Teardown Project
 
-1. swarm_remove_contents.sh
-2. swarm_remove.sh
-3. vms_ delete.sh
+```bash
+sh ./swarm_remove_contents.sh # prune docker system components
+sh ./swarm_remove.sh # remove swarm from vms
+sh./vms_ delete.sh # delete all vms
+```
