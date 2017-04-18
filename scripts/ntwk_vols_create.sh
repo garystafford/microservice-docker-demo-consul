@@ -14,7 +14,7 @@ docker network create \
   --ip-range=10.0.11.0/24 \
   --opt encrypted \
   --attachable=true \
-  widget_overlay_net \
+  demo_overlay_net \
 || echo "Already created?"
 
 docker network ls
@@ -29,7 +29,7 @@ for vm in "${vms[@]:3:3}"
 do
   docker-machine env ${vm}
   eval $(docker-machine env ${vm})
-  docker volume create --name=widget_data_vol \
+  docker volume create --name=demo_data_vol \
   || echo "Already created?"
 
   docker volume ls

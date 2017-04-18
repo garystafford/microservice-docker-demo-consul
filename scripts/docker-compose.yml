@@ -35,7 +35,8 @@ services:
     deploy:
       replicas: 1
       placement:
-        constraints: [node.hostname == worker3]
+        constraints:
+        - node.hostname == worker3
     environment:
       SERVICE_NAME: elk
       SERVICE_TAGS: monitoring
@@ -53,7 +54,6 @@ services:
       placement:
         constraints:
         - node.role == worker
-        - node.hostname != worker3
     environment:
       SERVICE_NAME: fluentd
       SERVICE_TAGS: monitoring
