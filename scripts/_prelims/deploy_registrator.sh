@@ -17,7 +17,7 @@ do
 
   docker service create \
     --name registrator \
-    --network widget_overlay_net \
+    --network demo_overlay_net \
     --env SERVICE_NAME:registrator \
     --env SERVICE_TAGS:monitoring \
     --mount type=bind,source=/var/run/docker.sock,destination=/tmp/docker.sock \

@@ -7,7 +7,7 @@ services:
     ports:
     - 5001:8080
     networks:
-    - widget_overlay_net
+    - demo_overlay_net
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     deploy:
@@ -29,9 +29,9 @@ services:
     depends_on:
     - fluentd
     networks:
-    - widget_overlay_net
+    - demo_overlay_net
     volumes:
-    - widget_data_vol:/var/lib/elasticsearch
+    - demo_data_vol:/var/lib/elasticsearch
     deploy:
       replicas: 1
       placement:
@@ -48,7 +48,7 @@ services:
     - "24224:24224/tcp"
     - "24224:24224/udp"
     networks:
-    - widget_overlay_net
+    - demo_overlay_net
     deploy:
       mode: global
       placement:
@@ -59,9 +59,9 @@ services:
       SERVICE_TAGS: monitoring
 
 networks:
-  widget_overlay_net:
+  demo_overlay_net:
     external: true
 
 volumes:
-  widget_data_vol:
+  demo_data_vol:
     external: true

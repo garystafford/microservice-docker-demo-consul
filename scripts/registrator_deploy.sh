@@ -19,7 +19,7 @@ do
   docker run -d \
     --name registrator \
     --net host \
-    --network widget_overlay_net \
+    --network demo_overlay_net \
     --env SERVICE_NAME=registrator \
     --env SERVICE_TAGS=monitoring \
     --volume /var/run/docker.sock:/tmp/docker.sock \
