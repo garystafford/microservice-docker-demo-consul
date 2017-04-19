@@ -36,7 +36,7 @@ for vm in ${vms[@]:5:1}
 do
   docker-machine create \
     --driver virtualbox \
-    --virtualbox-memory "2048" \
+    --virtualbox-memory "4096" \
     --virtualbox-cpu-count "2" \
     --virtualbox-disk-size "20000" \
     --engine-label purpose=logging \
