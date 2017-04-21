@@ -54,17 +54,16 @@ git clone --depth 1 --branch fluentd \
 
 ```bash
 cd microservice-docker-demo-consul/scripts/
-sh ./run_all # Single Uber runner script
+sh ./run_all.sh # single uber-script
 
-# Alternately, run the individual scripts
-sh ./vms_create.sh # creates vms using Docker Machine
+# alternately, run the individual scripts
+sh ./vms_create.sh # creates vms using docker machine
 sh ./swarm_create.sh # creates the swarm
 sh ./ntwk_vols_create.sh # creates overlay network and volumes
 sh ./consul_deploy.sh # deploys consul to all nodes
 sh ./registrator_deploy.sh # deploys registrator
 sh ./stack_deploy.sh # deploys fluentd, visualizer, elastic stack
-sh ./stack_validate.sh # waits/tests for all containers to start
-```
+sh ./stack_validate.sh # waits/tests for all containers to start```
 
 #### Utility Scripts
 
