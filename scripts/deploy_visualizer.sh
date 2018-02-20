@@ -11,6 +11,6 @@ docker service create \
   --mode global \
   --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
   --env "SERVICE_IGNORE=true" \
-  manomarks/visualizer:latest
+  dockersamples/visualizer:latest
 
 echo "Script completed..."
